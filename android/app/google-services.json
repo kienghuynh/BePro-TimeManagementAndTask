@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "508635857768",
+    "project_id": "beproemailauth",
+    "storage_bucket": "beproemailauth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508635857768:android:2ae4a2c04c422847984cdd",
+        "android_client_info": {
+          "package_name": "com.example.bepro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508635857768-3v3gfu1euf26kcvibqkdk8ien33mq98u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bepro",
+            "certificate_hash": "5d0ea2f404bad9b4657c3951357f1e54a992edfb"
+          }
+        },
+        {
+          "client_id": "508635857768-5lambb46vqc57p8l7j0fj5k026do3io1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZAJjmvshKGgp8AEe6EjTwZTI9aCejPs0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508635857768-5lambb46vqc57p8l7j0fj5k026do3io1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
