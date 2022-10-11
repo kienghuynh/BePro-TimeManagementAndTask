@@ -86,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Icon(Icons.person_pin),
                 ),
                 const SizedBox(height: 15),
-                _FullNameField(
+                _PhoneNumberField(
                   'Phone number...',
                   phoneController,
                   Icon(Icons.phone_android),
@@ -240,6 +240,13 @@ class _RegisterPageState extends State<RegisterPage> {
         borderSide: const BorderSide(color: Colors.black));
 
     return TextFormField(
+      validator: (value) {
+       if (value!.isEmpty) return ('Please enter your full name');
+        if (!RegExp(r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$").hasMatch(value)) {
+          return ('Please enter valid name');
+        }
+        return null;
+      },
       style: const TextStyle(color: Colors.black, fontSize: 18),
       controller: controller,
       decoration: InputDecoration(
@@ -261,6 +268,13 @@ class _RegisterPageState extends State<RegisterPage> {
         borderSide: const BorderSide(color: Colors.black));
 
     return TextFormField(
+      validator: (value) {
+       if (value!.isEmpty) return ('Please enter your phone number');
+        if (!RegExp(r'^0[1-9]{9}$').hasMatch(value)) {
+          return ('Invalid phone number. 10 character, start with 0');
+        }
+        return null;
+      },
       style: const TextStyle(color: Colors.black, fontSize: 18),
       controller: controller,
       decoration: InputDecoration(

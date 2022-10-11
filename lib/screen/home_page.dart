@@ -1,4 +1,5 @@
 import 'package:bepro/models/user_model.dart';
+import 'package:bepro/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -66,7 +67,38 @@ class _HomePageState extends State<HomePage> {
 
   Widget _pageWidget() {
     return SingleChildScrollView(
-      child: Column(children: [Text("${loggedInUser.fullName}")]),
+      child: Column(
+        children: [
+          Text("${loggedInUser.fullName}"),
+          _logoutButton(),
+        ]
+      ),
     );
+  }
+
+  Widget _logoutButton() {
+    return ElevatedButton(
+      onPressed: () {
+        logOut();
+      },
+      child: const SizedBox(
+        width: double.infinity,
+        child: Text(
+          'Logout',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+          shape: const StadiumBorder(side: BorderSide(color: Colors.black)),
+          primary: Colors.white,
+          onPrimary: Color.fromARGB(255, 78, 169, 160),
+          padding: EdgeInsets.symmetric(vertical: 16)),
+    );
+  }
+
+  Future<void> logOut() async {
+    await FirebaseAuth.instance.signOut();
+    NavigationService().popToFirst();
   }
 }
