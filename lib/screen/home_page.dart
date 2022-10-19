@@ -19,7 +19,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     FirebaseFirestore.instance
@@ -27,10 +26,8 @@ class _HomePageState extends State<HomePage> {
         .doc(user!.uid)
         .get()
         .then((value) {
-          loggedInUser = UserModel.fromMap(value.data());
-          setState(() {
-        
-          });
+      loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
     });
   }
 
@@ -51,28 +48,117 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          leading: const BackButton(
-            color: Color.fromARGB(255, 221, 181, 73),
-          ),
+          iconTheme: IconThemeData(color: Color.fromARGB(255, 221, 181, 73)),
           backgroundColor: Colors.white,
           title: const Text(
             'Welcome to BePro',
             style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
           ),
+          actions: [],
         ),
         body: _pageWidget(),
+        drawer: _drawerMenu(),
       ),
     );
   }
 
   Widget _pageWidget() {
     return SingleChildScrollView(
+      child: Column(children: [
+      ]),
+    );
+  }
+
+  Widget _drawerMenu() {
+    return Drawer(
+      child: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [_headerDrawer(), _drawerList()],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _headerDrawer() {
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        colors: [
+          Color.fromARGB(255, 221, 181, 73),
+          Color.fromARGB(255, 99, 216, 204)
+        ],
+      )),
+      width: double.infinity,
+      height: 200,
+      padding: EdgeInsets.only(top: 5.0),
       child: Column(
         children: [
-          Text("${loggedInUser.fullName}"),
-          _logoutButton(),
-        ]
+          SizedBox(
+            height: 70,
+          ),
+          _image('assets/person.png', 50),
+          _profileText("${loggedInUser.fullName}"),
+          _profileText("${loggedInUser.email}"),
+        ],
       ),
+    );
+  }
+
+  Widget _drawerList() {
+    return Container(
+        padding: EdgeInsets.only(
+          top: 15,
+        ),
+        child: Column(
+            // shows the list of menu drawer
+            children: [
+              _createTextButtonDrawer(
+                  'Change Infomation', Icon(Icons.recent_actors_outlined)),
+              _createTextButtonDrawer(
+                  'Change Password', Icon(Icons.settings_outlined)),
+              _createTextButtonDrawer('Setting', Icon(Icons.settings_outlined)),
+              _createTextButtonDrawer(
+                  'Privacy policy', Icon(Icons.policy_outlined)),
+              _createTextButtonDrawer(
+                  'Send feedback', Icon(Icons.feedback_outlined)),
+              Container(
+                padding: EdgeInsets.all(25),
+                child: _logoutButton(),
+              ),
+            ]));
+  }
+
+  Widget _createTextButtonDrawer(String text, Icon icon) {
+    return TextButton.icon(
+        icon: icon,
+        label: Text('$text',
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(fontSize: 20, color: Color.fromARGB(255, 0, 0, 0))),
+        onPressed: () {});
+  }
+
+  Widget _profileText(String string) {
+    return Text(
+      '$string',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _image(String url, double height) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+          alignment: Alignment(0, -0.8),
+          image: AssetImage('$url'),
+        ),
+      ),
+      height: height,
     );
   }
 

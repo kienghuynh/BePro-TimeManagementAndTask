@@ -30,11 +30,9 @@ class _LoginPageState extends State<LoginPage> {
         gradient: LinearGradient(colors: [
           Color.fromARGB(255, 221, 181, 73),
           Color.fromARGB(255, 99, 216, 204)
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        image: DecorationImage(
-          alignment: Alignment(0, -0.4),
-          image: ExactAssetImage('assets/background-login.png'),
-        ),
+        ], 
+        begin: Alignment.topLeft, end: Alignment.bottomRight),
+        
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -65,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _extraWelcomeText(),
-                const SizedBox(height: 250),
+                _image('assets/background-login.png', 300),
                 _EmailField(
                     'Username...', emailController, const Icon(Icons.mail)),
                 const SizedBox(height: 20),
@@ -91,6 +89,17 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _image(String url, double height) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          alignment: Alignment(0, -0.8),
+          image: ExactAssetImage('$url'),
+        ),
+      ),
+      height: height,
+    );
+  }
 
   Widget _EmailField(
       String hintText, TextEditingController controller, Icon icon) {
@@ -250,7 +259,6 @@ class _LoginPageState extends State<LoginPage> {
             errorMessage = "An undefined Error happened.";
         }
         Fluttertoast.showToast(msg: errorMessage!);
-        print(error.code);
       }
     }
   }
