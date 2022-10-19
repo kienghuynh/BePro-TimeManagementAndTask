@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
       '$string',
       textAlign: TextAlign.center,
       style: TextStyle(
-          fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          fontSize: 18, color: Colors.white),
     );
   }
 
