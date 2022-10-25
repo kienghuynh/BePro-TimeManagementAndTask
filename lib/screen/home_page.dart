@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
             'Welcome to BePro',
             style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
           ),
-          actions: [],
+          actions: [_actionNoti()],
         ),
         body: _pageWidget(),
         drawer: _drawerMenu(),
@@ -374,6 +374,10 @@ class _HomePageState extends State<HomePage> {
             )),
       ),
     );
+  }
+
+  Widget _actionNoti() {
+    return TextButton.icon(onPressed: () {}, icon: Icon(Icons.notifications_outlined,color: Color.fromARGB(255, 221, 181, 73),), label: Text(''));
   }
 
   Future<void> logOut() async {
