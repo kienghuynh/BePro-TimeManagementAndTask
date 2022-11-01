@@ -1,5 +1,6 @@
-import 'package:bepro/screen/home_page.dart';
-import 'package:bepro/screen/register-page.dart';
+import 'package:bepro/pages/home_page.dart';
+import 'package:bepro/pages/task_page.dart.dart';
+import 'package:bepro/pages/register-page.dart';
 
 import 'package:bepro/services/navigation_service.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +39,12 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          leading: const BackButton(
-            color: Color.fromARGB(255, 221, 181, 73),
-          ),
+          // leading: const BackButton(
+          //   color: Color.fromARGB(255, 221, 181, 73),
+          // ),
           backgroundColor: Colors.white,
           title: const Text(
-            'Sign In',
+            'Đăng nhập',
             style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
           ),
         ),
@@ -65,10 +66,10 @@ class _LoginPageState extends State<LoginPage> {
                 _extraWelcomeText(),
                 _image('assets/background-login.png', 300),
                 _EmailField(
-                    'Username...', emailController, const Icon(Icons.mail)),
+                    'Tài khoản Email ...', emailController, const Icon(Icons.mail)),
                 const SizedBox(height: 20),
                 _PasswordField(
-                    'Password', passwordController, const Icon(Icons.key)),
+                    'Mật khẩu ...', passwordController, const Icon(Icons.key)),
                 const SizedBox(height: 20),
                 _loginButton(),
                 const SizedBox(height: 20),
@@ -109,9 +110,9 @@ class _LoginPageState extends State<LoginPage> {
 
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty) return ('Please enter your email');
+        if (value!.isEmpty) return ('Email không được trống');
         if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value))
-          return ('Please enter valid email');
+          return ('Email chưa đúng định dạng.');
         return null;
       },
       style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -136,9 +137,9 @@ class _LoginPageState extends State<LoginPage> {
 
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty) return ('Please enter your password');
+        if (value!.isEmpty) return ('Mật khẩu không được trống.');
         if (!RegExp(r'^.{6,}$').hasMatch(value)) {
-          return ('Please enter valid password. Min 6 character');
+          return ('Mật khẩu phải từ 6 ký tự.');
         }
         return null;
       },
@@ -165,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
       child: const SizedBox(
         width: double.infinity,
         child: Text(
-          'Sign in',
+          'Đăng nhập',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20),
         ),
@@ -180,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _extraWelcomeText() {
     return const Text(
-      'Welcome to BePro !',
+      'Chào mừng bạn đến với BePro !',
       textAlign: TextAlign.center,
       style: TextStyle(
           fontSize: 34, color: Colors.white, fontWeight: FontWeight.bold),
@@ -197,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _extraText() {
     return const Text(
-      'Don\'t have User Account ?',
+      'Bạn chưa có tài khoản ?',
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
     );
@@ -205,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _createTextButton() {
     return TextButton(
-        child: Text('Create One',
+        child: Text('Đăng ký',
             textAlign: TextAlign.center,
             style:
                 TextStyle(fontSize: 20, color: Color.fromARGB(255, 0, 0, 0))),
@@ -216,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _ForgetPassTextButton() {
     return TextButton(
-        child: Text('Forget password ?',
+        child: Text('Quên mật khẩu ?',
             textAlign: TextAlign.center,
             style:
                 TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0))),
@@ -231,32 +232,32 @@ class _LoginPageState extends State<LoginPage> {
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
-                  Fluttertoast.showToast(msg: "Login Successful"),
-                  NavigationService().navigateToScreen(HomePage())
+                  Fluttertoast.showToast(msg: "Đăng nhập thành công !"),
+                  NavigationService().replaceScreen(HomePage())
                 });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":
-          errorMessage = "Your email address appears to be malformed.";
+          errorMessage = "Địa chỉ email của bạng không đúng định dạng.";
 
             break;
           case "wrong-password":
-            errorMessage = "Your password is wrong.";
+            errorMessage = "Sai tài khoản hoặc mật khẩu.";
             break;
           case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
+            errorMessage = "Sai tài khoản hoặc mật khẩu..";
             break;
           case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
+            errorMessage = "Tài khoản của bạn đã bị khoá.";
             break;
           case "too-many-requests":
-            errorMessage = "Too many requests";
+            errorMessage = "Quá nhiều thao tác";
             break;
           case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
+            errorMessage = "Đăng nhập bằng email và mật khẩu đang gặp lỗi.";
             break;
           default:
-            errorMessage = "An undefined Error happened.";
+            errorMessage = "Lỗi chưa xác định.";
         }
         Fluttertoast.showToast(msg: errorMessage!);
       }

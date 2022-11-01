@@ -1,11 +1,12 @@
 import 'package:bepro/models/user_model.dart';
+import 'package:bepro/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_auth/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../services/navigation_service.dart';
+
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -45,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           backgroundColor: Colors.white,
           title: const Text(
-            'Register',
+            'Đăng ký',
             style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
           ),
         ),
@@ -68,28 +69,28 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 0),
                 _EmailField('Email...', emailController, Icon(Icons.mail)),
                 const SizedBox(height: 15),
-                _PasswordField('Password...', passwordController,
+                _PasswordField('Mật khẩu...', passwordController,
                     Icon(Icons.vpn_key_outlined)),
                 const SizedBox(height: 15),
                 _PasswordConfirmField(
-                    'Confirm Password...',
+                    'Xác nhận mật khẩu...',
                     confirmPasswordController,
                     passwordController,
                     Icon(Icons.vpn_key_rounded)),
                 const SizedBox(height: 15),
                 _FullNameField(
-                  'Full name...',
+                  'Họ và tên...',
                   fullNameController,
                   Icon(Icons.person_pin),
                 ),
                 const SizedBox(height: 15),
                 _PhoneNumberField(
-                  'Phone number...',
+                  'Số điện thoại...',
                   phoneController,
                   Icon(Icons.phone_android),
                 ),
                 const SizedBox(height: 15),
-                _OTPField('OTP ...', otpController),
+                _OTPField('Mã OTP ...', otpController),
                 const SizedBox(height: 50),
                 _registerButton(),
                 const SizedBox(height: 20),
@@ -128,7 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
       child: const SizedBox(
         width: double.infinity,
         child: Text(
-          'Register',
+          'Đăng ký',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20),
         ),
@@ -149,9 +150,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty) return ('Please enter your email');
+        if (value!.isEmpty) return ('Email không để trống.');
         if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value))
-          return ('Please enter valid email');
+          return ('Email không hợp lệ.');
         return null;
       },
       style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -176,9 +177,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty) return ('Please enter your password');
+        if (value!.isEmpty) return ('Mật khẩu không để trống.');
         if (!RegExp(r'^.{6,}$').hasMatch(value)) {
-          return ('Please enter valid password. Min 6 character');
+          return ('PMật khẩu từ 6 ký tự.');
         }
         return null;
       },
@@ -208,12 +209,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty) return ('Please enter your password');
+        if (value!.isEmpty) return ('Xác nhận mật khẩu không được trống.');
         if (!RegExp(r'^.{6,}$').hasMatch(value)) {
-          return ('Please enter valid password. Min 6 character');
+          return ('Xác nhận mật khẩu phải từ 6 ký tự.');
         }
         if (passwordController.text != controller.text) {
-          return ("Confirm Password don't match with password");
+          return ("Xác nhận mật khẩu phải trùng khợp với mật khẩu.");
         }
         return null;
       },
@@ -240,10 +241,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty) return ('Please enter your full name');
+        if (value!.isEmpty) return ('Vui lòng nhập họ và tên');
         if (!RegExp(r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$")
             .hasMatch(value)) {
-          return ('Please enter valid name');
+          return ('Họ và tên không hợp lệ.');
         }
         return null;
       },
@@ -269,9 +270,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty) return ('Please enter your phone number');
+        if (value!.isEmpty) return ('Vui lòng nhập số điện thoại.');
         if (!RegExp(r'^0[1-9]{9}$').hasMatch(value)) {
-          return ('Invalid phone number. 10 character, start with 0');
+          return ('Số điện thoại không hợp lệ. Dài 10 ký tự và bắt đầu bằng 0');
         }
         return null;
       },
@@ -299,7 +300,7 @@ class _RegisterPageState extends State<RegisterPage> {
       controller: controller,
       decoration: InputDecoration(
         suffixIcon: TextButton(
-          child: Text('Send OTP'),
+          child: Text('Gữi mã OTP'),
           onPressed: () {
             sendOTP();
           },
@@ -316,7 +317,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _extraText() {
     return const Text(
-      'Already have an account ?',
+      'Bạn đã có tài khoản ?',
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 16, color: Colors.white),
     );
@@ -324,12 +325,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _signInTextButton() {
     return TextButton(
-        child: Text('Sign in',
+        child: Text('Đăng nhập',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20, color: Colors.white)),
         onPressed: () {
           NavigationService().goBack();
-          debugPrint('clicked');
+          //debugPrint('clicked');
         });
   }
 
@@ -360,7 +361,7 @@ class _RegisterPageState extends State<RegisterPage> {
         .doc(user.uid)
         .set(userModel.toMap());
 
-    Fluttertoast.showToast(msg: "Account created successfully");
+    Fluttertoast.showToast(msg: "Đăng ký thành công");
 
     NavigationService().popToFirst();
   }
@@ -370,9 +371,9 @@ class _RegisterPageState extends State<RegisterPage> {
     var res = await EmailAuth.sendOtp(receiverMail: emailController.text);
 
     if (res) {
-      Fluttertoast.showToast(msg: 'OTP sent');
+      Fluttertoast.showToast(msg: 'Đã gửi OTP');
     } else {
-      Fluttertoast.showToast(msg: 'We could not send OTP right now');
+      Fluttertoast.showToast(msg: 'Chưa thể gửi OTP. Thử lại sau');
     }
   }
 
@@ -380,10 +381,10 @@ class _RegisterPageState extends State<RegisterPage> {
     var res = EmailAuth.validate(
         receiverMail: emailController.text, userOTP: otpController.text);
     if (res) {
-      Fluttertoast.showToast(msg: 'OTP verify');
+      Fluttertoast.showToast(msg: 'Đã xác thực OTP');
       return true;
     } else {
-      Fluttertoast.showToast(msg: 'Invalid OTP');
+      Fluttertoast.showToast(msg: 'OTP không hợp lệ');
       return false;
     }
   }
