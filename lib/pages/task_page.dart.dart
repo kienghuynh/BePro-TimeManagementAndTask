@@ -1,5 +1,5 @@
 import 'package:bepro/models/user_model.dart';
-import 'package:bepro/pages/add_task_page.dart';
+import 'package:bepro/pages/calendar_page.dart';
 import 'package:bepro/pages/login_page.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:bepro/widget/home_page/clock_text.dart';
@@ -528,7 +528,7 @@ class _TaskPageState extends State<TaskPage> {
       child: FittedBox(
         child: FloatingActionButton(
             onPressed: () {
-              NavigationService().navigateToScreen(AddTaskPage());
+              NavigationService().navigateToScreen(CalendarPage());
             },
             backgroundColor: Color.fromARGB(255, 95, 255, 100),
             child: Icon(

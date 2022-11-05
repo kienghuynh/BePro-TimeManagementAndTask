@@ -1,4 +1,4 @@
-import 'package:bepro/pages/add_task_page.dart';
+import 'package:bepro/pages/calendar_page.dart';
 import 'package:bepro/pages/profile_page.dart';
 import 'package:bepro/pages/task_page.dart.dart';
 import 'package:bepro/pages/visualize_page.dart';
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List<Widget> _pages = [TaskPage(),VisualizePage(), ProfilePage(),AddTaskPage()];
+  List<Widget> _pages = [CalendarPage(),TaskPage(),VisualizePage(), ProfilePage(),];
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +53,17 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(10),
             tabs: [
               GButton(
-                icon: Icons.home_outlined,
-                text: "Trang chủ",
+                icon: Icons.calendar_month_outlined ,
+                text: "Lịch",
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                iconSize: 24,
+              ),
+              GButton(
+                icon: Icons.calendar_view_day_outlined,
+                text: "Danh sách",
                 textStyle: TextStyle(
                   fontSize: 16,
                   color: Color.fromARGB(255, 255, 255, 255),
@@ -79,15 +88,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 iconSize: 24,
               ),
-              GButton(
-                icon: Icons.add_circle_outline ,
-                text: "Thêm công việc",
-                textStyle: TextStyle(
-                  fontSize: 16,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-                iconSize: 24,
-              )
+              
             ]),
       ),
     );

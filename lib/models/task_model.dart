@@ -1,41 +1,53 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TaskModel {
   String? uid;
-  String? userId;
-  String? nameTask;
+  String? title;
+  String? detail;
   String? note;
   DateTime? startDate;
+  DateTime? deadline;
   DateTime? endDate;
-  String? status;
-  String? priority;
+  bool? isDone;
+  bool? isImportant;
 
   TaskModel(
-      {this.uid, this.userId, this.nameTask, this.note, this.startDate, this.endDate, this.status, this.priority});
+      {this.uid,
+      this.title,
+      this.detail,
+      this.note,
+      this.startDate,
+      this.deadline,
+      this.endDate,
+      this.isDone,
+      this.isImportant});
 
   // receiving data from cloud
-  factory TaskModel.fromMap(map) {
-    return TaskModel(
-      uid: map["uid"],
-      userId: map["userId"],
-      nameTask: map["nameTask"],
-      note: map["note"],
-      startDate: map["startDate"],
-      endDate: map["endDate"],
-      status: map["status"],
-      priority: map["priority"],
-    );
-  }
+  TaskModel fromJson(Map<String, dynamic> json) => TaskModel(
+    uid: json['uid'],
+    title: json['title'],
+    detail: json['detail'],
+    note: json['note'],
+    startDate: json['startDate'].toDate(),
+    deadline: json['deadline'].toDate(),
+    endDate: json['endDate'].toDate(),
+    isDone: json['isDone'],
+    isImportant: json['isImportant'],
+
+  );
 
   // sending data to cloud
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
-      'userId': userId,
-      'nameTask': nameTask,
+      'title': title,
+      'detail': detail,
       'note': note,
       'startDate': startDate,
+      'deadline': deadline,
       'endDate': endDate,
-      'status': status,
-      'priority': priority,
+      'isDone': isDone,
+      'isImportant': isImportant,
     };
   }
 }

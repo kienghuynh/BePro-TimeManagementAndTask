@@ -41,6 +41,7 @@ dependencies:
   timer_builder: ^2.0.0
   email_auth: ^0.0.1
   google_nav_bar: ^5.0.6
+  syncfusion_flutter_calendar: ^20.3.52
 
 
   # The following adds the Cupertino Icons font to your application.
