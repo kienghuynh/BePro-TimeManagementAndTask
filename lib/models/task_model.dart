@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class TaskModel {
   String? uid;
@@ -28,9 +29,9 @@ class TaskModel {
     title: json['title'],
     detail: json['detail'],
     note: json['note'],
-    startDate: json['startDate'].toDate(),
-    deadline: json['deadline'].toDate(),
-    endDate: json['endDate'].toDate(),
+    startDate: DateFormat('MM/dd/yy').parse(json['startDate']),
+    deadline:DateFormat('MM/dd/yy').parse(json['deadline']),
+    endDate:DateFormat('MM/dd/yy').parse(json['endDate']),
     isDone: json['isDone'],
     isImportant: json['isImportant'],
 

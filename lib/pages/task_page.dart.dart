@@ -1,6 +1,7 @@
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/pages/calendar_page.dart';
 import 'package:bepro/pages/login_page.dart';
+import 'package:bepro/pages/allTask_page.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:bepro/widget/home_page/clock_text.dart';
 import 'package:bepro/widget/home_page/clock_text_week.dart';
@@ -63,17 +64,16 @@ class _TaskPageState extends State<TaskPage> {
           actions: [
             Builder(
               builder: (context) => IconButton(
-                    icon: Icon(Icons.settings),
-                    onPressed: () => Scaffold.of(context).openEndDrawer(),
-                    tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-                  ),
+                icon: Icon(Icons.settings),
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              ),
             ),
           ],
         ),
         body: _pageWidget(),
         extendBody: true,
         endDrawer: _drawerMenu(),
-        
       ),
     );
   }
@@ -100,11 +100,31 @@ class _TaskPageState extends State<TaskPage> {
                       Row(
                         children: [
                           Expanded(
-                            child: _todayButton(),flex: 4,),
+                            child: _allTaskButton(),
+                            flex: 4,
+                          ),
                           //Expanded(child: SizedBox(),),
                           Expanded(
-                            child: _textCount(
-                                "0", Color.fromARGB(255, 0, 0, 0)),
+                            child:
+                                _textCount("3", Color.fromARGB(255, 0, 0, 0)),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      _bordertop(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _todayButton(),
+                            flex: 4,
+                          ),
+                          //Expanded(child: SizedBox(),),
+                          Expanded(
+                            child:
+                                _textCount("0", Color.fromARGB(255, 0, 0, 0)),
                           )
                         ],
                       ),
@@ -185,25 +205,33 @@ class _TaskPageState extends State<TaskPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 _bordertop(),
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                      borderRadius: BorderRadius.circular(18)
-                  ),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(height: 15,),
+                      SizedBox(
+                        height: 15,
+                      ),
                       _NotedButton(),
-                      SizedBox(height: 15,),
-                      
+                      SizedBox(
+                        height: 15,
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: 15,)
+                SizedBox(
+                  height: 15,
+                )
               ])),
         ),
       ),
@@ -326,182 +354,209 @@ class _TaskPageState extends State<TaskPage> {
 
   Widget _nextweekButton() {
     return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Colors.transparent
-        )
-      ),
-      onPressed: () {}, 
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(Icons.assignment_rounded,
-              color: Color.fromARGB(255, 255, 88, 10),
-              size: 30,)
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("        Tuần sau",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                height: 1.5,
-                fontSize: 18,
-                color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              )
-            )
-        ],
-      )
-    );
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.transparent)),
+        onPressed: () {},
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.assignment_rounded,
+                  color: Color.fromARGB(255, 255, 88, 10),
+                  size: 30,
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "        Tuần sau",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ))
+          ],
+        ));
+  }
+
+  Widget _allTaskButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.transparent)),
+        onPressed: () {
+          NavigationService().navigateToScreen(AllTaskPage());
+        },
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.article_outlined,
+                  color: Color.fromARGB(255, 84, 155, 255),
+                  size: 30,
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "        Tất cả",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ))
+          ],
+        ));
   }
 
   Widget _todayButton() {
     return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Colors.transparent
-        )
-      ),
-      onPressed: () {}, 
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(Icons.article_outlined,
-              color: Color.fromARGB(255, 255, 12, 57),
-              size: 30,)
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("        Hôm nay",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                height: 1.5,
-                fontSize: 18,
-                color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              )
-            )
-        ],
-      )
-    );
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.transparent)),
+        onPressed: () {
+          //NavigationService().navigateToScreen(TodayPage());
+        },
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.article_outlined,
+                  color: Color.fromARGB(255, 255, 12, 57),
+                  size: 30,
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "        Hôm nay",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ))
+          ],
+        ));
   }
 
   Widget _upcomingButton() {
     return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Colors.transparent)),
-      onPressed: () {}, 
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(Icons.calendar_month_outlined,
-              color: Color.fromARGB(255, 54, 255, 238),
-              size: 30,)),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("        Sắp tới",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                height: 1.5,
-                fontSize: 18,
-                color: Color.fromARGB(255, 0, 0, 0),
-                ),))
-        ],)
-    );
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.transparent)),
+        onPressed: () {},
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.calendar_month_outlined,
+                  color: Color.fromARGB(255, 54, 255, 238),
+                  size: 30,
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "        Sắp tới",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ))
+          ],
+        ));
   }
 
   Widget _importantButton() {
     return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Colors.transparent)),
-      onPressed: () {}, 
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(Icons.grade_outlined ,
-              color: Color.fromARGB(255, 255, 218, 35),
-              size: 30,)),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("        Quan trọng",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                height: 1.5,
-                fontSize: 18,
-                color: Color.fromARGB(255, 0, 0, 0),
-                ),))
-        ],)
-    );
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.transparent)),
+        onPressed: () {},
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.grade_outlined,
+                  color: Color.fromARGB(255, 255, 218, 35),
+                  size: 30,
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "        Quan trọng",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ))
+          ],
+        ));
   }
 
   Widget _completedButton() {
     return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Colors.transparent
-        )
-      ),
-      onPressed: () {}, 
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(Icons.assignment_turned_in_outlined,
-              color: Color.fromARGB(255, 67, 227, 123),
-              size: 30,)
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("        Đã hoàn thành",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                height: 1.5,
-                fontSize: 18,
-                color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              )
-            )
-        ],
-      )
-    );
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.transparent)),
+        onPressed: () {},
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.assignment_turned_in_outlined,
+                  color: Color.fromARGB(255, 67, 227, 123),
+                  size: 30,
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "        Đã hoàn thành",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ))
+          ],
+        ));
   }
 
   Widget _NotedButton() {
     return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Colors.transparent
-        )
-      ),
-      onPressed: () {}, 
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(Icons.note_alt,
-              color: Color.fromARGB(255, 71, 90, 89),
-              size: 30,)
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("        Ghi chú",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                height: 1.5,
-                fontSize: 18,
-                color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              )
-            )
-        ],
-      )
-    );
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.transparent)),
+        onPressed: () {},
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.note_alt,
+                  color: Color.fromARGB(255, 71, 90, 89),
+                  size: 30,
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "        Ghi chú",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ))
+          ],
+        ));
   }
 
   Widget _textCount(String text, Color color) {
@@ -612,4 +667,13 @@ class _TaskPageState extends State<TaskPage> {
     await FirebaseAuth.instance.signOut();
     NavigationService().replaceScreen(LoginPage());
   }
+
+  // String countToDay(){
+  //   DateTime nowdate = DateTime.now();
+  //   FirebaseFirestore.instance
+  //     .collection("users")
+  //     .doc(user!.uid)
+  //     .collection("tasks")
+  //     .where("startDate",isEqualTo: )
+
 }

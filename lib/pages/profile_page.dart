@@ -81,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 50,
             ),
             //_liskTask(),
-            list2()
+            //list2()
           ],
         ),
       )),
@@ -164,41 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget list2() {
-    Stream<QuerySnapshot> _taskStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .collection('tasks')
-        .orderBy('startDate', descending: true)
-        .snapshots();
-    return Container(
-      height: 300,
-      width: 300,
-      child: StreamBuilder<QuerySnapshot>(
-        stream: _taskStream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
-          } else {
-            return ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data =
-                    document.data()! as Map<String, dynamic>;
-                // TaskModel item = TaskModel().fromJson(data);
-                // debugPrint(item.toMap().toString());
-                return ListTile(
-                  title: Text(data['title']),
-                  subtitle: Text(data['detail']),
-                );
-              }).toList(),
-            );
-          }
-        },
-      ),
-    );
-  }
+  
 
   Stream<List<TaskModel>> getAllTask() {
     return firebaseFirestore
