@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +24,20 @@ class _CalendarPageState extends State<CalendarPage> {
   UserModel loggedInUser = UserModel();
   final _formKey = GlobalKey<FormState>();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  List<Color> _colorCollection = <Color>[];
+  EventData? events;
+
+  @override
+  void initState() {
+    _initializeEventColor();
+    getDataFromeFirestore().then((result) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {});
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +85,8 @@ class _CalendarPageState extends State<CalendarPage> {
                         children: [
                           _bodyCalendar(),
                           // ElevatedButton(
-                          //     onPressed: getEvent, child: Text('excute'))
+                          //     onPressed: getDataFromeFirestore,
+                          //     child: Text('excute'))
                         ],
                       ),
                     ),
@@ -85,70 +103,59 @@ class _CalendarPageState extends State<CalendarPage> {
       height: 570,
       child: SfCalendar(
         firstDayOfWeek: 1,
-        
         view: CalendarView.month,
         monthViewSettings: MonthViewSettings(
-          //navigationDirection: MonthNavigationDirection.horizontal,
-          showAgenda: true,
-          agendaViewHeight: 150,
-          appointmentDisplayCount: 2,
-          agendaItemHeight: 40,
-          agendaStyle: AgendaStyle(
-            
-            appointmentTextStyle: TextStyle(
-              fontSize: 16
-            )
-          ),
-          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
-          ),
-        dataSource: EventData(getEvent()),
+            //navigationDirection: MonthNavigationDirection.horizontal,
+            showAgenda: true,
+            agendaViewHeight: 150,
+            appointmentDisplayCount: 2,
+            agendaItemHeight: 40,
+            agendaStyle:
+                AgendaStyle(appointmentTextStyle: TextStyle(fontSize: 17, color: Colors.black)),
+            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+        dataSource: events,
       ),
     );
   }
 
-  List<Appointment> getEvent() {
-    // đọc được dữ liệu nhưng không gán vào 1 cái list được.
-    //giá trị trong hàm "then" không kéo ra ngoài được
-    List<Appointment> events = <Appointment>[];
-    //TaskModel itemStamp;
-    List<TaskModel> items = <TaskModel>[];
-    firebaseFirestore
+  Future<void> getDataFromeFirestore() async {
+    var snapshotValue = await firebaseFirestore
         .collection("users")
         .doc(user!.uid)
         .collection("tasks")
-        .get()
-        .then((value) => {
-              // value.docs.forEach((result) {
-              //   itemStamp = TaskModel().fromJson(result.data());
-              // }),
-            });
-    
+        .get();
 
-    events.add(Appointment(
-        startTime: DateTime.now().add(Duration(days: -2)),
-        endTime: DateTime.now().add(Duration(days: -1)),
-        //isAllDay: true,
-        subject: 'Học tiếng anh',
-        color: Colors.blue));
+    final Random random = new Random();
+    List<TaskModel> list =
+        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
+    List<Appointment> listEvent = <Appointment>[];
+    debugPrint(list.length.toString());
+    list.forEach(
+      (element) {
+        print(element.startDate);
+        listEvent.add(Appointment(
+            startTime:element.startDate as DateTime,
+            endTime: element.deadline as DateTime,
+            color: _colorCollection[random.nextInt(9)],
+            subject: element.title.toString()));
+      },
+    );
+    setState(() {
+      events = EventData(listEvent);
+    });
+  }
 
-    events.add(Appointment(
-        startTime: DateTime.now().add(Duration(days: -5)),
-        endTime: DateTime.now().add(Duration(days: -4)),
-        //isAllDay: true,
-        subject: 'Viết Báo cáo KLTN',
-        color: Colors.red));
-    
-    events.add(Appointment(
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        isAllDay: true,
-        subject: 'Báo cáo KLTN',
-        color: Color.fromARGB(255, 163, 102, 48)));
-    
-    
-
-    debugPrint(' event ${events.length.toString()}');
-    return events;
+  void _initializeEventColor() {
+    _colorCollection.add(Color.fromARGB(255, 255, 84, 84));
+    _colorCollection.add(Color.fromARGB(255, 255, 178, 84));
+    _colorCollection.add(Color.fromARGB(255, 255, 238, 84));
+    _colorCollection.add(Color.fromARGB(255, 215, 255, 84));
+    _colorCollection.add(Color.fromARGB(255, 87, 255, 84));
+    _colorCollection.add(Color.fromARGB(255, 84, 255, 172));
+    _colorCollection.add(Color.fromARGB(255, 84, 221, 255));
+    _colorCollection.add(Color.fromARGB(255, 192, 82, 255));
+    _colorCollection.add(Color.fromARGB(255, 255, 147, 248));
+    _colorCollection.add(Color.fromARGB(255, 169, 103, 62));
   }
 }
 

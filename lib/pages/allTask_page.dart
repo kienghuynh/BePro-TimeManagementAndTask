@@ -20,12 +20,9 @@ class _AllTaskPageState extends State<AllTaskPage> {
 
   final _auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  
-
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
@@ -57,9 +54,6 @@ class _AllTaskPageState extends State<AllTaskPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 50,
-            ),
             list()
           ],
         ),
@@ -72,19 +66,21 @@ class _AllTaskPageState extends State<AllTaskPage> {
         .collection('users')
         .doc(user!.uid)
         .collection('tasks')
-        .orderBy('startDate', descending: true)
-        .snapshots();
-    return SingleChildScrollView(
-      child: Container(
-        height: 600,
-        width: 370,
-        child: StreamBuilder<QuerySnapshot>(
+        //.where("isImportant",isEqualTo: true)
+        .snapshots(includeMetadataChanges: true);
+    return Container(
+        height: 630,
+        margin: EdgeInsets.all(10),
+          child: StreamBuilder<QuerySnapshot>(
           stream: _taskStream,
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
-              return Text('Something went wrong');
+              return Center(child: Text('Something went wrong'));
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading");
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             } else {
               return ListView(
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -96,31 +92,77 @@ class _AllTaskPageState extends State<AllTaskPage> {
                     margin: EdgeInsets.all(2),
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Colors.white70,
+                        color: Color.fromARGB(230, 255, 255, 255),
                         borderRadius: BorderRadius.circular(18)),
                     child: ListTile(
-                      leading: IconButton(icon: Icon(Icons.check_circle_outline_outlined, color: Color.fromARGB(255, 105, 240, 132),), onPressed: (){},),
-                      title: Row(
-                        children:[ Text(
-                          data['title'],
-                          style: TextStyle(fontSize: 22),
+                      leading: IconButton(
+                        icon: Icon(
+                          Icons.check_circle_outline_outlined,
+                          color: Color.fromARGB(255, 105, 240, 132),
                         ),
-                        
+                        onPressed: () {},
+                      ),
+                      title: Row(children: [
+                        Expanded(
+                          flex: 4,
+                          child: Text(
+                            data['title'],
+                            style: TextStyle(fontSize: 22),
+                          ),
+                        ),
                       ]),
-                      subtitle: Column(children: [
-                        Row(children: [
-                          Text(data['detail'],style: TextStyle(fontSize: 17, color: Color.fromARGB(195, 0, 0, 0)),),
-                          Expanded(flex: 2,child: Text(''),),
-                          (data['isImportant'])
-                              ? IconButton(icon: Icon(Icons.star ),color: Colors.amber,onPressed:() {},)
-                              : IconButton(icon: Icon(Icons.star_border ),color: Colors.amber,onPressed:() {},)
+                      subtitle: Container(
+                        margin: EdgeInsets.only(top: 10, bottom: 10),
+                        child: Column(children: [
+                          Row(children: [
+                            Expanded(
+                              flex: 4,
+                              child: Text(
+                                data['detail'],
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: Color.fromARGB(195, 0, 0, 0)),
+                              ),
+                            ),
+                            (data['isImportant'])
+                                ? IconButton(
+                                    icon: Icon(Icons.star),
+                                    color: Colors.amber,
+                                    onPressed: () {},
+                                  )
+                                : IconButton(
+                                    icon: Icon(Icons.star_border),
+                                    color: Colors.amber,
+                                    onPressed: () {},
+                                  )
+                          ]),
+                          Row(
+                            children:[
+                              Column(
+                                children: [Center(child: Icon(Icons.edit_calendar))],
+                              ),
+                              Column(
+                              children:[ 
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Từ: ${data['startDate']}',
+                                      style: TextStyle(color: Colors.redAccent),
+                                    ),
+                                  ],
+                              ),
+                              Row(
+                              children: [
+                                Text(
+                                  'Tới: ${data['deadline']}',
+                                  style: TextStyle(color: Colors.redAccent),
+                                ),
+                              ],
+                            )
+                                                ]),
+                          ]),
                         ]),
-                        Row(children: [
-                          Text('Từ: ${data['startDate']} tới: ${data['endDate']}', style: TextStyle(color: Colors.redAccent),),
-                         
-                          ],
-                        )
-                      ]),
+                      ),
                     ),
                   );
                 }).toList(),
@@ -128,7 +170,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
             }
           },
         ),
-      ),
+      
     );
   }
 }

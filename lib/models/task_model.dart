@@ -29,9 +29,9 @@ class TaskModel {
     title: json['title'],
     detail: json['detail'],
     note: json['note'],
-    startDate: DateFormat('MM/dd/yy').parse(json['startDate']),
-    deadline:DateFormat('MM/dd/yy').parse(json['deadline']),
-    endDate:DateFormat('MM/dd/yy').parse(json['endDate']),
+    startDate: DateFormat('dd/MM/yyyy hh:mm:ss').parse(json['startDate']),
+    deadline:DateFormat('dd/MM/yyyy hh:mm:ss').parse(json['deadline']),
+    endDate:DateFormat('dd/MM/yyyy hh:mm:ss').parse(json['endDate']),
     isDone: json['isDone'],
     isImportant: json['isImportant'],
 

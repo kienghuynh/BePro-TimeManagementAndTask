@@ -1,3 +1,4 @@
+import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/pages/calendar_page.dart';
 import 'package:bepro/pages/login_page.dart';
@@ -23,11 +24,14 @@ class _TaskPageState extends State<TaskPage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   final _formKey = GlobalKey<FormState>();
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  String countAllTask = '';
 
   @override
   void initState() {
     super.initState();
-
+    count();
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -73,6 +77,7 @@ class _TaskPageState extends State<TaskPage> {
         ),
         body: _pageWidget(),
         extendBody: true,
+        floatingActionButton: _btnAddFloating(),
         endDrawer: _drawerMenu(),
       ),
     );
@@ -105,12 +110,14 @@ class _TaskPageState extends State<TaskPage> {
                           ),
                           //Expanded(child: SizedBox(),),
                           Expanded(
-                            child:
-                                _textCount("3", Color.fromARGB(255, 0, 0, 0)),
+                            child: _textCount(
+                                countAllTask, Color.fromARGB(255, 0, 0, 0)),
                           )
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
                       _bordertop(),
                       SizedBox(
                         height: 20,
@@ -583,7 +590,7 @@ class _TaskPageState extends State<TaskPage> {
       child: FittedBox(
         child: FloatingActionButton(
             onPressed: () {
-              NavigationService().navigateToScreen(CalendarPage());
+              //NavigationService().navigateToScreen(CalendarPage());
             },
             backgroundColor: Color.fromARGB(255, 95, 255, 100),
             child: Icon(
@@ -668,12 +675,18 @@ class _TaskPageState extends State<TaskPage> {
     NavigationService().replaceScreen(LoginPage());
   }
 
-  // String countToDay(){
-  //   DateTime nowdate = DateTime.now();
-  //   FirebaseFirestore.instance
-  //     .collection("users")
-  //     .doc(user!.uid)
-  //     .collection("tasks")
-  //     .where("startDate",isEqualTo: )
+  Future<void> count() async {
+    var snapshotValue = await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("tasks")
+        .get();
 
+    List<TaskModel> list =
+        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
+
+    setState(() {
+      countAllTask = list.length.toString();
+    });
+  }
 }
