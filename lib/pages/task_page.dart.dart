@@ -701,6 +701,9 @@ class _TaskPageState extends State<TaskPage> {
               ),
               onPressed: () {
                 postTaskToFireStore();
+                setState(() {
+                  count();
+                });
                 NavigationService().goBack();
               },
               label: Text(
@@ -776,7 +779,7 @@ class _TaskPageState extends State<TaskPage> {
             NavigationService().goBack();
             showDialogCreateTask();
           },
-              currentTime: (deadline == null) ? DateTime.now() : startDate,
+              currentTime: (deadline == null) ? startDate : deadline,
               locale: LocaleType.vi);
         });
       },
@@ -856,6 +859,5 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       countAllTask = list.length.toString();
     });
-   
   }
 }

@@ -103,9 +103,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Widget _bodyCalendar() {
     return Container(
-      height: 870,
+      height: 850,
       child: SfCalendar(
-       
         headerStyle: CalendarHeaderStyle(
           textAlign: TextAlign.center
         ),
@@ -115,9 +114,9 @@ class _CalendarPageState extends State<CalendarPage> {
           
             //navigationDirection: MonthNavigationDirection.horizontal,
             showAgenda: true,
-            agendaViewHeight: 125,
+            agendaViewHeight: 120,
             appointmentDisplayCount: 3,
-            agendaItemHeight: 40,
+            agendaItemHeight: 35,
             agendaStyle: AgendaStyle(
                 appointmentTextStyle:
                     TextStyle(fontSize: 17, color: Colors.black)),
