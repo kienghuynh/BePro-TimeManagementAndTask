@@ -27,25 +27,27 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 221, 181, 73),
-          Color.fromARGB(255, 99, 216, 204)
-        ], 
-        begin: Alignment.topLeft, end: Alignment.bottomRight),
+      // decoration: const BoxDecoration(
+      //   gradient: LinearGradient(colors: [
+      //     Color.fromARGB(255, 221, 181, 73),
+      //     Color.fromARGB(255, 99, 216, 204)
+      //   ], 
+      //   begin: Alignment.topLeft, end: Alignment.bottomRight),
         
-      ),
+      // ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        //backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: true,
           // leading: const BackButton(
           //   color: Color.fromARGB(255, 221, 181, 73),
           // ),
           backgroundColor: Colors.white,
-          title: const Text(
-            'Đăng nhập',
-            style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
+          title: Center(
+            child: const Text(
+              'Đăng nhập',
+              style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
+            ),
           ),
         ),
         body: _pageWidget(),
@@ -184,17 +186,10 @@ class _LoginPageState extends State<LoginPage> {
       'Chào mừng bạn đến với BePro !',
       textAlign: TextAlign.center,
       style: TextStyle(
-          fontSize: 34, color: Colors.white, fontWeight: FontWeight.bold),
+          fontSize: 34, color: Color.fromARGB(255, 99, 216, 204), fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _introduceText() {
-    return const Text(
-      'Organize your work and life.',
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 22, color: Color.fromARGB(255, 50, 111, 105)),
-    );
-  }
 
   Widget _extraText() {
     return const Text(

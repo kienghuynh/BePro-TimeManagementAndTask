@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bepro/models/appointment_model.dart';
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,24 +43,26 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 221, 181, 73),
-          Color.fromARGB(255, 99, 216, 204)
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-      ),
+      
+      // decoration: const BoxDecoration(
+      //   gradient: LinearGradient(colors: [
+      //     Color.fromARGB(255, 0, 0, 0),
+      //     Color.fromARGB(255, 0, 0, 0)
+      //   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      // ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          leading: const BackButton(
-            color: Color.fromARGB(255, 221, 181, 73),
-          ),
+          
           backgroundColor: Colors.white,
-          title: const Text(
-            '',
-            style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
+          title: Center(
+            child: const Text(
+                'Lịch công việc',
+                style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
+              ),
           ),
+          
         ),
         body: _pageWidget(),
       ),
@@ -100,18 +103,24 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Widget _bodyCalendar() {
     return Container(
-      height: 570,
+      height: 870,
       child: SfCalendar(
+       
+        headerStyle: CalendarHeaderStyle(
+          textAlign: TextAlign.center
+        ),
         firstDayOfWeek: 1,
         view: CalendarView.month,
         monthViewSettings: MonthViewSettings(
+          
             //navigationDirection: MonthNavigationDirection.horizontal,
             showAgenda: true,
-            agendaViewHeight: 150,
-            appointmentDisplayCount: 2,
+            agendaViewHeight: 125,
+            appointmentDisplayCount: 3,
             agendaItemHeight: 40,
-            agendaStyle:
-                AgendaStyle(appointmentTextStyle: TextStyle(fontSize: 17, color: Colors.black)),
+            agendaStyle: AgendaStyle(
+                appointmentTextStyle:
+                    TextStyle(fontSize: 17, color: Colors.black)),
             appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
         dataSource: events,
       ),
@@ -126,17 +135,17 @@ class _CalendarPageState extends State<CalendarPage> {
         .get();
 
     final Random random = new Random();
-    List<TaskModel> list =
-        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
+    List<AppointmentModel> list =
+        snapshotValue.docs.map((e) => AppointmentModel().fromJson(e.data())).toList();
     List<Appointment> listEvent = <Appointment>[];
-    debugPrint(list.length.toString());
     list.forEach(
       (element) {
-        print(element.startDate);
+        
         listEvent.add(Appointment(
-            startTime:element.startDate as DateTime,
+            startTime: element.startDate as DateTime,
             endTime: element.deadline as DateTime,
-            color: _colorCollection[random.nextInt(9)],
+            color:
+                _colorCollection[element.colorCode as int],
             subject: element.title.toString()));
       },
     );
@@ -147,14 +156,14 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _initializeEventColor() {
     _colorCollection.add(Color.fromARGB(255, 255, 84, 84));
-    _colorCollection.add(Color.fromARGB(255, 255, 178, 84));
-    _colorCollection.add(Color.fromARGB(255, 255, 238, 84));
-    _colorCollection.add(Color.fromARGB(255, 215, 255, 84));
-    _colorCollection.add(Color.fromARGB(255, 87, 255, 84));
-    _colorCollection.add(Color.fromARGB(255, 84, 255, 172));
-    _colorCollection.add(Color.fromARGB(255, 84, 221, 255));
-    _colorCollection.add(Color.fromARGB(255, 192, 82, 255));
-    _colorCollection.add(Color.fromARGB(255, 255, 147, 248));
+    _colorCollection.add(Color.fromARGB(255, 255, 141, 47));
+    _colorCollection.add(Color.fromARGB(255, 81, 255, 68));
+    _colorCollection.add(Color.fromARGB(255, 75, 205, 39));
+    _colorCollection.add(Color.fromARGB(255, 60, 255, 252));
+    _colorCollection.add(Color.fromARGB(255, 63, 191, 255));
+    _colorCollection.add(Color.fromARGB(255, 58, 71, 255));
+    _colorCollection.add(Color.fromARGB(255, 172, 71, 255));
+    _colorCollection.add(Color.fromARGB(255, 255, 72, 243));
     _colorCollection.add(Color.fromARGB(255, 169, 103, 62));
   }
 }

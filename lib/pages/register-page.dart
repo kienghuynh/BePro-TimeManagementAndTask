@@ -30,26 +30,28 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 221, 181, 73),
-          Color.fromARGB(255, 99, 216, 204)
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-      ),
+      // decoration: BoxDecoration(
+      //   gradient: LinearGradient(colors: [
+      //     Color.fromARGB(255, 221, 181, 73),
+      //     Color.fromARGB(255, 99, 216, 204)
+      //   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      // ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        //backgroundColor: Colors.transparent,
         appBar: AppBar(
           //disable icon turn back in leading : flase
-          automaticallyImplyLeading: true,
+          //automaticallyImplyLeading: true,
           leading: const BackButton(
-            color: Color.fromARGB(255, 221, 181, 73),
+            color: Color.fromARGB(255, 99, 216, 204),
           ),
           backgroundColor: Colors.white,
-          title: const Text(
-            'Đăng ký',
-            style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
-          ),
-        ),
+          title: (
+              const Text(
+              'Đăng ký',
+              style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
+            )
+          
+        )),
         body: _pageWidget(),
       ),
     );
@@ -269,10 +271,11 @@ class _RegisterPageState extends State<RegisterPage> {
         borderSide: const BorderSide(color: Colors.black));
 
     return TextFormField(
+      keyboardType: TextInputType.phone,
       validator: (value) {
         if (value!.isEmpty) return ('Vui lòng nhập số điện thoại.');
         if (!RegExp(r'^0[1-9]{9}$').hasMatch(value)) {
-          return ('Số điện thoại không hợp lệ. Dài 10 ký tự và bắt đầu bằng 0');
+          return ('Dài 10 ký tự và bắt đầu bằng 0');
         }
         return null;
       },

@@ -24,23 +24,24 @@ class _AllTaskPageState extends State<AllTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 221, 181, 73),
-            Color.fromARGB(255, 99, 216, 204)
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        ),
+        // decoration: const BoxDecoration(
+        //   gradient: LinearGradient(colors: [
+        //     Color.fromARGB(255, 221, 181, 73),
+        //     Color.fromARGB(255, 99, 216, 204)
+        //   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        // ),
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          //backgroundColor: Colors.transparent,
           appBar: AppBar(
             automaticallyImplyLeading: true,
             leading: const BackButton(
-              color: Color.fromARGB(255, 221, 181, 73),
+              color: Color.fromARGB(255, 99, 216, 204),
             ),
             backgroundColor: Colors.white,
-            title: const Text(
-              'Tất cả công việc',
-              style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
+            title:const Text(
+              'Danh sách toàn bộ',
+              style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
+            
             ),
           ),
           body: _pageWidget(),
@@ -66,6 +67,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
         .collection('users')
         .doc(user!.uid)
         .collection('tasks')
+        .orderBy('createAt',descending: false)
         //.where("isImportant",isEqualTo: true)
         .snapshots(includeMetadataChanges: true);
     return Container(
@@ -136,6 +138,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
                                     onPressed: () {},
                                   )
                           ]),
+                          Row(children: [SizedBox(height: 10,)],),
                           Row(
                             children:[
                               Column(
@@ -158,9 +161,11 @@ class _AllTaskPageState extends State<AllTaskPage> {
                                   style: TextStyle(color: Colors.redAccent),
                                 ),
                               ],
-                            )
-                                                ]),
+                              ),
+                              
+                            ]),
                           ]),
+                          Row(children: [Expanded(child: _bordertop())],)
                         ]),
                       ),
                     ),
@@ -171,6 +176,17 @@ class _AllTaskPageState extends State<AllTaskPage> {
           },
         ),
       
+    );
+  }
+  Widget _bordertop() {
+    return Container(
+      height: 30,
+      margin: EdgeInsets.only( right: 35),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+          border: Border(
+            
+              bottom: BorderSide(color: Color.fromARGB(90, 0, 0, 0), width: 1))),
     );
   }
 }

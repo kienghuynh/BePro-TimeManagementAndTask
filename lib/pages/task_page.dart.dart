@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/pages/calendar_page.dart';
@@ -6,12 +8,18 @@ import 'package:bepro/pages/allTask_page.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:bepro/widget/home_page/clock_text.dart';
 import 'package:bepro/widget/home_page/clock_text_week.dart';
+import 'package:bepro/widget/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'package:like_button/like_button.dart';
 import 'package:timer_builder/timer_builder.dart';
+import 'package:uuid/uuid.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -23,10 +31,21 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
+
   final _formKey = GlobalKey<FormState>();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
+  TextEditingController titleController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
+
   String countAllTask = '';
+  bool isImportant = true;
+
+  DateTime? startDate;
+  DateTime? deadline;
+  bool pressedStartDate = false;
+  bool pressedDeadline = false;
 
   @override
   void initState() {
@@ -45,25 +64,27 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 221, 181, 73),
-          Color.fromARGB(255, 99, 216, 204)
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        // image: DecorationImage(
-        //   alignment: Alignment(0, -0.4),
-        //   image: ExactAssetImage('assets/background-login.png'),
-        // ),
-      ),
+      // decoration: const BoxDecoration(
+      //   gradient: LinearGradient(colors: [
+      //     Color.fromARGB(255, 221, 181, 73),
+      //     Color.fromARGB(255, 99, 216, 204)
+      //   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      //   // image: DecorationImage(
+      //   //   alignment: Alignment(0, -0.4),
+      //   //   image: ExactAssetImage('assets/background-login.png'),
+      //   // ),
+      // ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          iconTheme: IconThemeData(color: Color.fromARGB(255, 221, 181, 73)),
+          iconTheme: IconThemeData(color: Color.fromARGB(255, 99, 216, 204)),
           backgroundColor: Colors.white,
-          title: const Text(
-            '',
-            style: TextStyle(color: Color.fromARGB(255, 221, 181, 73)),
+          title: Center(
+            child: const Text(
+              'Quản lý thời gian & công việc',
+              style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
+            ),
           ),
           actions: [
             Builder(
@@ -518,7 +539,7 @@ class _TaskPageState extends State<TaskPage> {
             Align(
                 alignment: Alignment.centerLeft,
                 child: Icon(
-                  Icons.assignment_turned_in_outlined,
+                  Icons.done_all_outlined,
                   color: Color.fromARGB(255, 67, 227, 123),
                   size: 30,
                 )),
@@ -590,7 +611,7 @@ class _TaskPageState extends State<TaskPage> {
       child: FittedBox(
         child: FloatingActionButton(
             onPressed: () {
-              //NavigationService().navigateToScreen(CalendarPage());
+              showDialogCreateTask();
             },
             backgroundColor: Color.fromARGB(255, 95, 255, 100),
             child: Icon(
@@ -612,62 +633,209 @@ class _TaskPageState extends State<TaskPage> {
         label: Text(''));
   }
 
-  Widget _introText() {
-    return Container(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 20,
+  void showDialogCreateTask() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(
+            'Thêm công việc',
+            style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
           ),
-          Row(
-            children: [
-              Icon(
-                Icons.waving_hand_outlined,
-                color: Colors.white,
-                size: 40,
+          content: Container(
+            width: double.maxFinite,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Utility().TextFieldCustom(
+                    'Tiêu đề',
+                    titleController,
+                    Icon(
+                      Icons.text_fields_outlined,
+                    )),
+                SizedBox(
+                  height: 10,
+                ),
+                Utility().TextFieldCustom('Nội dung', detailController,
+                    Icon(Icons.description_outlined)),
+                SizedBox(
+                  height: 10,
+                ),
+                Utility().TextFieldCustom(
+                    'Ghi chú', noteController, Icon(Icons.edit_note)),
+                SizedBox(
+                  height: 10,
+                ),
+                TimePickerStartDate(),
+                pressedStartDate ? _displayDateTime(startDate!) : Text(''),
+                TimePickerDeadline(),
+                pressedDeadline ? _displayDateTime(deadline!) : Text(''),
+                ImportantButton(),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton.icon(
+              icon: Icon(
+                Icons.clear_outlined,
+                color: Color.fromARGB(255, 255, 0, 0),
+                size: 30,
               ),
-              Text(
-                '  Hi ${loggedInUser.fullName}',
+              onPressed: () {
+                NavigationService().goBack();
+              },
+              label: Text(
+                '',
                 style: TextStyle(
-                    fontSize: 22,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            children: [
-              Text(
-                'Hom nay bạn muốn làm gì ?',
+                    color: Color.fromARGB(255, 255, 0, 0), fontSize: 18),
+              ),
+            ),
+            SizedBox(
+              width: 150,
+            ),
+            TextButton.icon(
+              icon: Icon(
+                Icons.done_all,
+                color: Color.fromARGB(255, 0, 177, 6),
+                size: 30,
+              ),
+              onPressed: () {
+                postTaskToFireStore();
+                NavigationService().goBack();
+              },
+              label: Text(
+                '',
                 style: TextStyle(
-                    fontSize: 24,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 255, 255)),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Text(
-                'Hãy để BePro giúp bạn nhé !',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 255, 255)),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 15,
-          ),
-        ],
+                    color: Color.fromARGB(255, 0, 177, 6), fontSize: 18),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget ImportantButton() {
+    return Container(
+      child: Tooltip(
+        message: "Đánh dấu việc quan trọng",
+        child: LikeButton(
+            size: 40,
+            //isLiked: true,
+            likeBuilder: (isLiked) {
+              return Icon(
+                Icons.star,
+                color: (isLiked) ? Colors.yellow : Colors.grey,
+                size: 40,
+              );
+            },
+            onTap: onButtonTapped),
       ),
     );
+  }
+
+  Widget TimePickerStartDate() {
+    return TextButton.icon(
+      onPressed: () {
+        setState(() {
+          pressedStartDate = true;
+          DatePicker.showDateTimePicker(context,
+              showTitleActions: true,
+              minTime: DateTime(2000, 1, 1),
+              maxTime: DateTime(2099, 12, 31), onChanged: (date) {
+            // print('change $date in time zone ' +
+            //     date.timeZoneOffset.inHours.toString());
+          }, onConfirm: (date) {
+            startDate = date;
+            NavigationService().goBack();
+            showDialogCreateTask();
+          },
+              currentTime: (startDate == null) ? DateTime.now() : startDate,
+              locale: LocaleType.vi);
+        });
+      },
+      label: Text(
+        'Bắt đầu lúc',
+        style: TextStyle(color: Colors.blue, fontSize: 18),
+      ),
+      icon: Icon(Icons.access_time),
+    );
+  }
+
+  Widget TimePickerDeadline() {
+    return TextButton.icon(
+      onPressed: () {
+        setState(() {
+          pressedDeadline = true;
+          DatePicker.showDateTimePicker(context,
+              showTitleActions: true,
+              minTime: DateTime(2000, 1, 1),
+              maxTime: DateTime(2099, 12, 31),
+              onChanged: (date) {}, onConfirm: (date) {
+            deadline = date;
+            NavigationService().goBack();
+            showDialogCreateTask();
+          },
+              currentTime: (deadline == null) ? DateTime.now() : startDate,
+              locale: LocaleType.vi);
+        });
+      },
+      label: Text(
+        'tới lúc',
+        style: TextStyle(color: Colors.blue, fontSize: 18),
+      ),
+      icon: Icon(Icons.access_time),
+    );
+  }
+
+  postTaskToFireStore() async {
+    var uuid = Uuid().v4();
+    Random random = Random();
+    TaskModel task = TaskModel();
+
+    task.uid = uuid;
+    task.title = titleController.text;
+    task.detail = detailController.text;
+    task.colorCode = random.nextInt(9).toString();
+    task.createAt = DateTime.now();
+    task.deadline = deadline;
+    task.doneDate = startDate!.add(Duration(days: 1));
+    task.isDone = false;
+    task.isImportant = isImportant;
+    task.note = noteController.text;
+    task.startDate = startDate;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("tasks")
+        .doc(task.uid)
+        .set(task.toMap());
+    print(countAllTask);
+    Fluttertoast.showToast(msg: "Đã thêm 1 công việc");
+  }
+
+  void cancel() {
+    titleController.text = '';
+    detailController.text = '';
+    noteController.text = '';
+  }
+
+  @override
+  Widget _displayDateTime(DateTime date) {
+    return Center(
+        child: Text(
+      " ${date.hour}:${date.minute} ${date.day}/${date.month}/${date.year}",
+      style: TextStyle(
+          fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500),
+    ));
+  }
+
+  Future<bool> onButtonTapped(bool isLiked) async {
+    setState(() {
+      isImportant = !isLiked;
+    });
+    return !isLiked;
   }
 
   Future<void> logOut() async {
@@ -688,5 +856,6 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       countAllTask = list.length.toString();
     });
+   
   }
 }

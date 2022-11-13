@@ -3,7 +3,9 @@ import 'package:bepro/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'pages/login_page.dart';
-
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +25,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      localizationsDelegates: [
+         GlobalMaterialLocalizations.delegate
+       ],
+       supportedLocales: [
+         const Locale('en'),
+         const Locale('vi')
+       ],
       home: const LoginPage(),
       navigatorKey: NavigationService().navigationKey,
     );
