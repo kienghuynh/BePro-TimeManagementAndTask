@@ -6,6 +6,7 @@ import 'pages/login_page.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,12 +27,16 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       localizationsDelegates: [
-         GlobalMaterialLocalizations.delegate
+          //AppLocalizations.delegate, // Add this line
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
        ],
        supportedLocales: [
          const Locale('en'),
          const Locale('vi')
        ],
+      locale: Locale('vi'),
       home: const LoginPage(),
       navigatorKey: NavigationService().navigationKey,
     );

@@ -40,7 +40,7 @@ class _TaskPageState extends State<TaskPage> {
   TextEditingController noteController = TextEditingController();
 
   String countAllTask = '';
-  bool isImportant = true;
+  bool isImportant = false;
 
   DateTime? startDate;
   DateTime? deadline;
@@ -642,38 +642,78 @@ class _TaskPageState extends State<TaskPage> {
             'Thêm công việc',
             style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
           ),
-          content: Container(
-            width: double.maxFinite,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Utility().TextFieldCustom(
-                    'Tiêu đề',
-                    titleController,
-                    Icon(
-                      Icons.text_fields_outlined,
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-                Utility().TextFieldCustom('Nội dung', detailController,
-                    Icon(Icons.description_outlined)),
-                SizedBox(
-                  height: 10,
-                ),
-                Utility().TextFieldCustom(
-                    'Ghi chú', noteController, Icon(Icons.edit_note)),
-                SizedBox(
-                  height: 10,
-                ),
-                TimePickerStartDate(),
-                pressedStartDate ? _displayDateTime(startDate!) : Text(''),
-                TimePickerDeadline(),
-                pressedDeadline ? _displayDateTime(deadline!) : Text(''),
-                ImportantButton(),
-              ],
-            ),
+          content: SingleChildScrollView(
+            child: Column(
+                children: [
+                  Container(
+                    height: 70,
+                    width: 600,
+                    child: Utility().TextFieldCustom(
+                      'Tiêu đề',
+                      titleController,
+                      Icon(
+                        Icons.text_fields_outlined,
+                      )),),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 100,
+                    width: 600,
+                    child: Utility().TextFieldCustom('Nội dung', detailController,
+                       Icon(Icons.description_outlined)),),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 70,
+                    width: 600,
+                    child: Utility().TextFieldCustom(
+                      'Ghi chú', noteController, Icon(Icons.edit_note)),),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 50,
+                    width: 600,
+                    alignment: Alignment.centerLeft,
+                    child: Row(children:[ 
+                      TimePickerStartDate(),
+                      pressedStartDate ? _displayDateTime(startDate!) : Text('')]),),
+                  Container(
+                    height: 50,
+                    width: 600,
+                    alignment: Alignment.centerLeft,
+                    child: Row(children:[ 
+                      TimePickerDeadline(),
+                      pressedDeadline ? _displayDateTime(deadline!) : Text('')]),),
+                  Container(
+                    height: 50,
+                    width: 600,
+                    alignment: Alignment.center,
+                    child: Row(children:[Text('    Công việc quan trọng:      ',style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 18),), 
+                      ImportantButton(),]),),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: Utility().TextFieldCustom(
+                  //     'Tiêu đề',
+                  //     titleController,
+                  //     Icon(
+                  //       Icons.text_fields_outlined,
+                  //     )),),
+                  // Expanded(child: SizedBox(),),
+                  // Expanded(child: Utility().TextFieldCustom('Nội dung', detailController,
+                  //     Icon(Icons.description_outlined)), flex: 1,),
+                  // Expanded(child: SizedBox()),
+                  // Expanded(child: Utility().TextFieldCustom(
+                  //     'Ghi chú', noteController, Icon(Icons.edit_note)), flex: 1,),
+                  // Expanded(
+                  //   child: SizedBox(),
+                  // ),
+                  // Expanded(child: TimePickerStartDate()),
+                  // Expanded(child: pressedStartDate ? _displayDateTime(startDate!) : Text(''),),
+                  // Expanded(child: TimePickerDeadline()),
+                  // Expanded(child: pressedDeadline ? _displayDateTime(deadline!) : Text(''),),
+                  // Expanded(child: ImportantButton()),
+                ],
+              ),
           ),
+          
+          
           actions: [
             TextButton.icon(
               icon: Icon(
@@ -746,8 +786,7 @@ class _TaskPageState extends State<TaskPage> {
               showTitleActions: true,
               minTime: DateTime(2000, 1, 1),
               maxTime: DateTime(2099, 12, 31), onChanged: (date) {
-            // print('change $date in time zone ' +
-            //     date.timeZoneOffset.inHours.toString());
+
           }, onConfirm: (date) {
             startDate = date;
             NavigationService().goBack();
@@ -758,7 +797,7 @@ class _TaskPageState extends State<TaskPage> {
         });
       },
       label: Text(
-        'Bắt đầu lúc',
+        'Bắt đầu',
         style: TextStyle(color: Colors.blue, fontSize: 18),
       ),
       icon: Icon(Icons.access_time),
@@ -784,7 +823,7 @@ class _TaskPageState extends State<TaskPage> {
         });
       },
       label: Text(
-        'tới lúc',
+        'Kết thúc',
         style: TextStyle(color: Colors.blue, fontSize: 18),
       ),
       icon: Icon(Icons.access_time),
@@ -828,7 +867,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget _displayDateTime(DateTime date) {
     return Center(
         child: Text(
-      " ${date.hour}:${date.minute} ${date.day}/${date.month}/${date.year}",
+      "${date.hour}:${date.minute} ${date.day}/${date.month}/${date.year}",
       style: TextStyle(
           fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500),
     ));

@@ -104,23 +104,26 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget _bodyCalendar() {
     return Container(
       height: 850,
+      margin: EdgeInsets.only(left: 15),
       child: SfCalendar(
         headerStyle: CalendarHeaderStyle(
           textAlign: TextAlign.center
         ),
         firstDayOfWeek: 1,
         view: CalendarView.month,
+        
         monthViewSettings: MonthViewSettings(
           
             //navigationDirection: MonthNavigationDirection.horizontal,
             showAgenda: true,
             agendaViewHeight: 120,
-            appointmentDisplayCount: 3,
+            //appointmentDisplayCount: 3,
             agendaItemHeight: 35,
             agendaStyle: AgendaStyle(
                 appointmentTextStyle:
                     TextStyle(fontSize: 17, color: Colors.black)),
-            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
+            ),
         dataSource: events,
       ),
     );

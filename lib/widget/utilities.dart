@@ -11,6 +11,7 @@ class Utility {
         borderSide: const BorderSide(color: Colors.black));
 
     return TextFormField(
+      expands: true,
       maxLines: null,
       keyboardType: TextInputType.multiline,
       style: const TextStyle(color: Colors.black, fontSize: 18),

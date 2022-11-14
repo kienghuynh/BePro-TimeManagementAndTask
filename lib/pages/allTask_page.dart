@@ -217,6 +217,17 @@ class _AllTaskPageState extends State<AllTaskPage> {
     );
   }
 
+  // void showDialogDetailTask() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (_) {
+  //       return AlertDialog(
+  //         title: Text('Chi tiết',
+  //           style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),),
+  //       );
+  //   });
+  // }
+
   Future<void> getTaskById(String uid) async {
     var snapshot = await firebaseFirestore
         .collection("users")
