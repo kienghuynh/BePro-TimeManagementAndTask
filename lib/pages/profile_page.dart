@@ -1,7 +1,7 @@
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
+import 'package:bepro/pages/edit_profile_page.dart';
 import 'package:bepro/pages/task_page.dart.dart';
-import 'package:bepro/widget/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,18 +24,33 @@ class _ProfilePageState extends State<ProfilePage> {
   final _auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
+  bool isLoading = false;
   @override
   void initState() {
+    // FirebaseFirestore.instance
+    //     .collection("users")
+    //     .doc(user!.uid)
+    //     .get()
+    //     .then((value) {
+    //   loggedInUser = UserModel.fromMap(value.data());
+    //   setState(() {});
+    // });
+    getUser();
+
+    super.initState();
+  }
+
+  Future<UserModel> getUser() async {
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
         .get()
         .then((value) {
       loggedInUser = UserModel.fromMap(value.data());
+      isLoading = loggedInUser != null;
       setState(() {});
     });
-
-    super.initState();
+    return loggedInUser;
   }
 
   @override
@@ -46,135 +61,163 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           backgroundColor: Colors.white,
-          title: Center(
-              child: const Text(
+          title: const Center(
+            child: Text(
               'Thông tin cá nhân',
               style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
             ),
-            ),
+          ),
         ),
-        body: _pageWidget(),
+        body: isLoading
+            ? _pageWidget()
+            : const Center(
+                child: CircularProgressIndicator(
+                  color: Color.fromARGB(255, 99, 216, 204),
+                ),
+              ),
       ),
     );
   }
 
   Widget _pageWidget() {
-    return SingleChildScrollView(
-      child: Container(
-        width: double.maxFinite,
-          margin: EdgeInsets.all(25),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                    offset: Offset(4, 4))
-              ]),
-          child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 80,
-            ),
-            _image(150,150),
-            SizedBox(height: 20,),
-            _textInfoName('${loggedInUser.fullName}','Họ và tên', 18, Icons.person, Colors.blueAccent),
-            SizedBox(
-              height: 5,
-            ),
-            Container(
-              margin: EdgeInsets.only(left:30),
-              child: Utility().BottomLine()),
-            SizedBox(height: 20,),
-            _textInfo('${loggedInUser.email}','Email:', 18, Icons.email_outlined, Color.fromARGB(255, 250, 142, 34)),
-            SizedBox(height: 5,),
-            Container(
-              margin: EdgeInsets.only(left:30),
-              child: Utility().BottomLine()),
-            SizedBox(height: 30,),
-            _textInfoName('${loggedInUser.phoneNumber}','Số điện thoại', 18, Icons.phone, Color.fromARGB(255, 115, 240, 57)),
-            SizedBox(height: 50,),
-            
-          ],
-        ),
-      )),
-    );
+    return FutureBuilder<UserModel>(
+        future: getUser(),
+        builder: (context, snapshot) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                _image('assets/person.png', 150),
+                _editButton(),
+                const Divider(
+                  height: 0.5,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                //_textInfo('${loggedInUser.fullName}'),
+                LabelValue(
+                  icon: Icons.account_circle,
+                  value: loggedInUser.fullName,
+                  label: "Tên",
+                ),
+                const SizedBox(height: 15),
+                const Divider(
+                  height: 0.5,
+                ),
+                const SizedBox(height: 10),
+                LabelValue(
+                  icon: Icons.call,
+                  value: loggedInUser.phoneNumber,
+                  label: "Di động",
+                ),
+                const SizedBox(height: 15),
+                const Divider(
+                  height: 0.5,
+                ),
+                const SizedBox(height: 10),
+                LabelValue(
+                  icon: Icons.email_outlined,
+                  value: loggedInUser.email,
+                  label: "Email",
+                ),
+               
+              ],
+            )),
+          );
+        });
   }
 
-  Widget _image( double height, double size) {
+  Widget _image(String url, double height) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
+        image: DecorationImage(
+          alignment: Alignment(0, -0.8),
+          image: AssetImage('$url'),
+        ),
       ),
-      child: Icon(Icons.person, size: size, color: Color.fromARGB(255, 99, 216, 204),),
       height: height,
     );
   }
 
   Widget _editButton() {
     return TextButton.icon(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const EditProfilePage()));
+        },
         icon: Icon(Icons.edit_outlined),
         label: Text(
-          'Chỉnh sữa',
-          style: TextStyle(fontSize: 17),
+          'Chỉnh sửa',
+          style: TextStyle(fontSize: 20),
         ));
   }
 
-  Widget _textInfo(String text, String textTitle,double fontSize, IconData icon, Color iconColor) {
+  Widget _textInfo(String text) {
     return Container(
-      width: 350,
-      height: 90,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 15),
-                child: Icon(icon,size: fontSize+6, color: iconColor,)),
-              Container(
-                margin: EdgeInsets.only(left: 15),
-                child: Text(textTitle, style: TextStyle(fontSize: fontSize),),),
-              Container(child: SizedBox(),)
-            
+      child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Icon(
+              Icons.person,
+              color: Color.fromARGB(255, 99, 216, 204),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Text('${loggedInUser.fullName}')
+          ])),
+    );
+  }
+}
+
+class LabelValue extends StatelessWidget {
+  final String? value;
+  final IconData icon;
+  final String? label;
+
+  const LabelValue({Key? key, this.value, required this.icon, this.label})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              icon,
+              size: 30,
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+                child: Text(
+              value ?? '',
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromARGB(255, 99, 216, 204)),
+            ))
           ],
-              
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 38, top: 5),
+          child: Text(
+            label ?? '',
+            style: const TextStyle(fontSize: 18, color: Colors.black),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              
-              Container(
-                margin: EdgeInsets.all(15),
-                child: Text(text, style: TextStyle(fontSize: fontSize),)),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
-
-  Widget _textInfoName(String text, String textTitle,double fontSize, IconData icon, Color colorIcon) {
-    return Container(
-      width: 350,
-      height: 40,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: Icon(icon,size: fontSize+6, color: colorIcon,)),
-              Expanded(flex: 2,child: Text(textTitle, style: TextStyle(fontSize: fontSize),)),
-              Expanded(flex: 3,child: Text(text, style: TextStyle(fontSize: fontSize),))]
-          ),
-        ],
-      ),
-    );
-  }
-
 }

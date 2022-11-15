@@ -199,20 +199,30 @@ class _DonePageState extends State<DonePage> {
                             )
                           ],
                         ),
+                        SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+
+              // ngày hoàn thành
+              Utility().DisplayTextDetail(
+                Icons.done_all,
+                ('Đã hoành thành'),
+                  18,
+                  FontWeight.normal,
+                      Color.fromARGB(255, 32, 176, 56)
+              ),
+              SizedBox(height: 40,),  
+              Utility().BottomLine(),
+              SizedBox(
+                height: 20,
+              ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              TextButton.icon(
-                                label: Text(''),
-                                onPressed: () {
-                                  doneTask(data['uid']);
-                                },
-                                icon: Icon(
-                                  Icons.done_all,
-                                  color: Color.fromARGB(255, 33, 242, 141),
-                                  size: 30,
-                                ),
-                              ),
+                              
                               TextButton.icon(
                                 onPressed: () {
                                   createPopUpSureDelete(data['uid']);
@@ -295,16 +305,5 @@ class _DonePageState extends State<DonePage> {
         .delete();
   }
 
-  void doneTask(String uid) {
-    DateTime doneDate = DateTime.now();
-    firebaseFirestore
-        .collection("users")
-        .doc(user!.uid)
-        .collection("tasks")
-        .doc(uid)
-        .set({
-      'isDone': 'true',
-      'doneDate': TaskModel().formatDate(doneDate),
-    });
-  }
+  
 }
