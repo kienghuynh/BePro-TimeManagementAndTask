@@ -1,5 +1,8 @@
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
+import 'package:bepro/pages/detailTask_page.dart';
+import 'package:bepro/services/navigation_service.dart';
+import 'package:bepro/widget/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +25,18 @@ class _AllTaskPageState extends State<AllTaskPage> {
   final _auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  TaskModel? modelDetail;
+  TaskModel modelDetail = TaskModel();
+  bool editButtonPressed = false;
+
+  TextEditingController titleController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +101,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data()! as Map<String, dynamic>;
-                // TaskModel item = TaskModel().fromJson(data);
+                TaskModel item = TaskModel().fromJson(data);
                 // debugPrint(item.toMap().toString());
                 return Container(
                   margin: EdgeInsets.all(10),
@@ -106,9 +120,8 @@ class _AllTaskPageState extends State<AllTaskPage> {
                       ]),
                   child: ListTile(
                     onTap: () {
-                      print(data['uid']);
-                      getTaskById(data['uid']);
-                      //print('${modelDetail!.title}');
+                      NavigationService()
+                      .navigateToScreen(DetailTaskPage(detailModel: item));
                     },
                     title: Row(children: [
                       Expanded(
@@ -129,12 +142,21 @@ class _AllTaskPageState extends State<AllTaskPage> {
                                   icon: Icon(Icons.star_border),
                                   color: Colors.amber,
                                   onPressed: () {},
-                                ))
+                                )),
+                      Expanded(
+                          child: IconButton(
+                        onPressed: () {
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.blueAccent,
+                        ),
+                      ))
                     ]),
                     subtitle: Container(
                       margin: EdgeInsets.only(top: 10, bottom: 10),
                       child: Column(children: [
-                        _bordertop(),
+                        Utility().BottomLine(),
                         SizedBox(
                           height: 15,
                         ),
@@ -152,7 +174,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
                         SizedBox(
                           height: 15,
                         ),
-                        _bordertop(),
+                       Utility().BottomLine(),
                         SizedBox(
                           height: 10,
                         ),
@@ -192,7 +214,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
                           ],
                         ),
                         Row(
-                          children: [Expanded(child: _bordertop())],
+                          children: [Expanded(child: Utility().BottomLine(),)],
                         )
                       ]),
                     ),
@@ -206,42 +228,108 @@ class _AllTaskPageState extends State<AllTaskPage> {
     );
   }
 
-  Widget _bordertop() {
-    return Container(
-      height: 1,
-      margin: EdgeInsets.only(right: 35),
-      decoration: BoxDecoration(
-          color: Color.fromARGB(255, 255, 255, 255),
-          border: Border(
-              top: BorderSide(color: Color.fromARGB(90, 0, 0, 0), width: 1))),
-    );
+  void showDialogDetailTask(TaskModel model) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            actions: [
+              TextButton.icon(
+                icon: Icon(
+                  Icons.clear_outlined,
+                  color: Color.fromARGB(255, 255, 0, 0),
+                  size: 30,
+                ),
+                onPressed: () {
+                  setState(() {
+                    editButtonPressed = false;
+                  });
+                  NavigationService().goBack();
+                },
+                label: Text(
+                  '',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 0, 0), fontSize: 18),
+                ),
+              ),
+            ],
+            title: Text(
+              'Chi tiết',
+              style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  (editButtonPressed)
+                      ? Row(children: [
+                          Container(
+                            height: 60,
+                            width: 200,
+                            child: Utility().TextFieldCustom(
+                                '${modelDetail.title}',
+                                titleController,
+                                Icon(
+                                  Icons.text_fields_outlined,
+                                )),
+                          ),
+                          TextButton.icon(
+                              onPressed: (() {
+                                setState(() {
+                                  editButtonPressed = !editButtonPressed;
+                                });
+                                NavigationService().goBack();
+                                showDialogDetailTask(modelDetail);
+                              }),
+                              icon: Icon(Icons.edit),
+                              label: Text(''))
+                        ])
+                      : Row(children: [
+                          Container(
+                            height: 60,
+                            width: 200,
+                            child: Utility().TextFieldCustomReadOnly(
+                                '${modelDetail.title}',
+                                Icon(
+                                  Icons.text_fields_outlined,
+                                )),
+                          ),
+                          TextButton.icon(
+                              onPressed: (() {
+                                setState(() {
+                                  editButtonPressed = !editButtonPressed;
+                                });
+                                NavigationService().goBack();
+                                showDialogDetailTask(modelDetail);
+                              }),
+                              icon: Icon(Icons.edit),
+                              label: Text(''))
+                        ])
+                ],
+              ),
+            ),
+          );
+        });
   }
 
-  // void showDialogDetailTask() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (_) {
-  //       return AlertDialog(
-  //         title: Text('Chi tiết',
-  //           style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),),
-  //       );
-  //   });
-  // }
+  setStateController() {
+    setState(() {
+      titleController.text = modelDetail.title.toString();
+    });
+    print('get title controller : done ${titleController.text}');
+    showDialogDetailTask(modelDetail);
+  }
 
   Future<void> getTaskById(String uid) async {
-    var snapshot = await firebaseFirestore
+    FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
         .collection("tasks")
-        .get();
-    List<TaskModel> list =
-        snapshot.docs.map((e) => TaskModel().fromJson(e.data())).toList();
-
-    for (var item in list) {
-      if (item.uid == uid)
-        setState(() {
-          modelDetail = item;
-        });
-    }
+        .doc(uid)
+        .get()
+        .then((value) {
+      modelDetail = TaskModel.fromMap(value.data());
+      setStateController();
+      setState(() {});
+    });
   }
 }

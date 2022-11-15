@@ -44,6 +44,23 @@ class TaskModel {
         isImportant: json['isImportant'],
       );
 
+//mapping
+  factory TaskModel.fromMap(map) {
+    return TaskModel(
+      uid: map['uid'],
+      title: map['title'],
+      detail: map['detail'],
+      note: map['note'],
+      startDate: DateFormat('dd/MM/yyyy hh:mm:ss').parse(map['startDate']),
+      deadline: DateFormat('dd/MM/yyyy hh:mm:ss').parse(map['deadline']),
+      doneDate: DateFormat('dd/MM/yyyy hh:mm:ss').parse(map['doneDate']),
+      createAt: DateFormat('dd/MM/yyyy hh:mm:ss').parse(map['createAt']),
+      colorCode: map['colorCode'],
+      isDone: map['isDone'],
+      isImportant: map['isImportant'],
+    );
+  }
+
   // format date to string for post firebase
   String formatDate(DateTime? date) {
     String month = date!.month < 10 ? "0${date.month}" : "${date.month}";
