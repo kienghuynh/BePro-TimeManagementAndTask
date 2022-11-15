@@ -1,0 +1,3 @@
+fix current week page
+fix text week clock 
+fix taskPage : Future<void> countWeek()

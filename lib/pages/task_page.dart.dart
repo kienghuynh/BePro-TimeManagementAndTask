@@ -3,8 +3,12 @@ import 'dart:math';
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/pages/calendar_page.dart';
+import 'package:bepro/pages/currentWeekTask_page.dart';
+import 'package:bepro/pages/doneTask_page.dart';
+import 'package:bepro/pages/importantTask_page.dart';
 import 'package:bepro/pages/login_page.dart';
 import 'package:bepro/pages/allTask_page.dart';
+import 'package:bepro/pages/todayTask_page.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:bepro/widget/home_page/clock_text.dart';
 import 'package:bepro/widget/home_page/clock_text_week.dart';
@@ -40,6 +44,11 @@ class _TaskPageState extends State<TaskPage> {
   TextEditingController noteController = TextEditingController();
 
   String countAllTask = '';
+  String countTodayTask = '';
+  String countImportantTask = '';
+  String countDoneTask = '';
+  String countWeekTask = '';
+
   bool isImportant = false;
 
   DateTime? startDate;
@@ -50,7 +59,11 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
-    count();
+    countall();
+    countToday();
+    countImportant();
+    countDone();
+    countWeek();
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -64,16 +77,6 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // decoration: const BoxDecoration(
-      //   gradient: LinearGradient(colors: [
-      //     Color.fromARGB(255, 221, 181, 73),
-      //     Color.fromARGB(255, 99, 216, 204)
-      //   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-      //   // image: DecorationImage(
-      //   //   alignment: Alignment(0, -0.4),
-      //   //   image: ExactAssetImage('assets/background-login.png'),
-      //   // ),
-      // ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
@@ -151,8 +154,8 @@ class _TaskPageState extends State<TaskPage> {
                           ),
                           //Expanded(child: SizedBox(),),
                           Expanded(
-                            child:
-                                _textCount("0", Color.fromARGB(255, 0, 0, 0)),
+                            child: _textCount(
+                                countTodayTask, Color.fromARGB(255, 0, 0, 0)),
                           )
                         ],
                       ),
@@ -168,37 +171,37 @@ class _TaskPageState extends State<TaskPage> {
                       ),
                       Row(
                         children: [
-                          Expanded(child: _nextweekButton(), flex: 4),
+                          Expanded(child: _weekButton(), flex: 4),
                           Expanded(
                             flex: 1,
-                            child:
-                                _textCount("0", Color.fromARGB(255, 0, 0, 0)),
+                            child: _textCount(
+                                countWeekTask, Color.fromARGB(255, 0, 0, 0)),
                           )
                         ],
                       ),
-                      Row(
-                        children: [ClockTextWeek()],
-                      ),
+                      // Row(
+                      //   children: [ClockTextWeek()],
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
                       _bordertop(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: _upcomingButton(), flex: 4),
-                          Expanded(
-                            child:
-                                _textCount("0", Color.fromARGB(255, 0, 0, 0)),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _bordertop(),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      // Row(
+                      //   children: [
+                      //     Expanded(child: _upcomingButton(), flex: 4),
+                      //     Expanded(
+                      //       child:
+                      //           _textCount("0", Color.fromARGB(255, 0, 0, 0)),
+                      //     )
+                      //   ],
+                      // ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      // _bordertop(),
                       SizedBox(
                         height: 20,
                       ),
@@ -206,8 +209,8 @@ class _TaskPageState extends State<TaskPage> {
                         children: [
                           Expanded(child: _importantButton(), flex: 4),
                           Expanded(
-                            child:
-                                _textCount("0", Color.fromARGB(255, 0, 0, 0)),
+                            child: _textCount(countImportantTask,
+                                Color.fromARGB(255, 0, 0, 0)),
                           )
                         ],
                       ),
@@ -222,8 +225,8 @@ class _TaskPageState extends State<TaskPage> {
                         children: [
                           Expanded(child: _completedButton(), flex: 4),
                           Expanded(
-                            child:
-                                _textCount("0", Color.fromARGB(255, 0, 0, 0)),
+                            child: _textCount(
+                                countDoneTask, Color.fromARGB(255, 0, 0, 0)),
                           )
                         ],
                       ),
@@ -236,30 +239,30 @@ class _TaskPageState extends State<TaskPage> {
                 SizedBox(
                   height: 15,
                 ),
-                _bordertop(),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(18)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _NotedButton(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                )
+                // _bordertop(),
+                // SizedBox(
+                //   height: 15,
+                //),
+                // Container(
+                //   decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       borderRadius: BorderRadius.circular(18)),
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     children: [
+                //       SizedBox(
+                //         height: 15,
+                //       ),
+                //       _NotedButton(),
+                //       SizedBox(
+                //         height: 15,
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // )
               ])),
         ),
       ),
@@ -380,11 +383,13 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Widget _nextweekButton() {
+  Widget _weekButton() {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             side: BorderSide(color: Colors.transparent)),
-        onPressed: () {},
+        onPressed: () {
+          NavigationService().navigateToScreen(CurrentWeekPage());
+        },
         child: Stack(
           children: [
             Align(
@@ -397,7 +402,7 @@ class _TaskPageState extends State<TaskPage> {
             Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "        Tuần sau",
+                  "        Tuần này",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     height: 1.5,
@@ -445,7 +450,7 @@ class _TaskPageState extends State<TaskPage> {
         style: OutlinedButton.styleFrom(
             side: BorderSide(color: Colors.transparent)),
         onPressed: () {
-          //NavigationService().navigateToScreen(TodayPage());
+          NavigationService().navigateToScreen(TodayPage());
         },
         child: Stack(
           children: [
@@ -504,7 +509,9 @@ class _TaskPageState extends State<TaskPage> {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             side: BorderSide(color: Colors.transparent)),
-        onPressed: () {},
+        onPressed: () {
+          NavigationService().navigateToScreen(ImportantPage());
+        },
         child: Stack(
           children: [
             Align(
@@ -533,7 +540,9 @@ class _TaskPageState extends State<TaskPage> {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             side: BorderSide(color: Colors.transparent)),
-        onPressed: () {},
+        onPressed: () {
+          NavigationService().navigateToScreen(DonePage());
+        },
         child: Stack(
           children: [
             Align(
@@ -742,7 +751,7 @@ class _TaskPageState extends State<TaskPage> {
               onPressed: () {
                 postTaskToFireStore();
                 setState(() {
-                  count();
+                  countall();
                 });
                 NavigationService().goBack();
               },
@@ -877,7 +886,7 @@ class _TaskPageState extends State<TaskPage> {
     NavigationService().replaceScreen(LoginPage());
   }
 
-  Future<void> count() async {
+  Future<void> countall() async {
     var snapshotValue = await firebaseFirestore
         .collection("users")
         .doc(user!.uid)
@@ -889,6 +898,96 @@ class _TaskPageState extends State<TaskPage> {
 
     setState(() {
       countAllTask = list.length.toString();
+    });
+  }
+
+  Future<void> countToday() async {
+    var snapshotValue = await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("tasks")
+        .get();
+
+    List<TaskModel> list =
+        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
+
+    List<TaskModel> listAccept = [];
+
+    list.forEach(
+      (element) {
+        if (element.startDate!.day == DateTime.now().day ||
+            element.deadline!.day == DateTime.now().day) {
+          listAccept.add(element);
+        }
+        if (element.startDate!.compareTo(DateTime.now()) < 0 &&
+            element.deadline!.compareTo(DateTime.now()) > 0) {
+          listAccept.add(element);
+        }
+      },
+    );
+
+    setState(() {
+      countTodayTask = listAccept.length.toString();
+    });
+  }
+
+  Future<void> countWeek() async {
+    var snapshotValue = await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("tasks")
+        .get();
+
+    List<TaskModel> list =
+        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
+
+    List<TaskModel> listAccept = [];
+
+    list.forEach(
+      (element) {
+        if (element.startDate!
+                    .compareTo(DateTime.now().add(Duration(days: -2))) >
+                0 &&
+            element.deadline!.compareTo(DateTime.now().add(Duration(days: 5))) <
+                0) {
+          listAccept.add(element);
+        }
+      },
+    );
+
+    setState(() {
+      countWeekTask = listAccept.length.toString();
+    });
+  }
+
+  Future<void> countImportant() async {
+    var snapshotValue = await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("tasks")
+        .where("isImportant", isEqualTo: true)
+        .get();
+
+    List<TaskModel> list =
+        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
+
+    setState(() {
+      countImportantTask = list.length.toString();
+    });
+  }
+
+  Future<void> countDone() async {
+    var snapshotValue = await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("tasks")
+        .where("isDone", isEqualTo: true)
+        .get();
+
+    List<TaskModel> list =
+        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
+    setState(() {
+      countDoneTask = list.length.toString();
     });
   }
 }
