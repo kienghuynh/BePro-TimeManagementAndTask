@@ -84,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             _image(150,150),
             SizedBox(height: 20,),
-            _textInfoName('${loggedInUser.fullName}','Họ và tên', 18, Icons.person),
+            _textInfoName('${loggedInUser.fullName}','Họ và tên', 18, Icons.person, Colors.blueAccent),
             SizedBox(
               height: 5,
             ),
@@ -92,13 +92,13 @@ class _ProfilePageState extends State<ProfilePage> {
               margin: EdgeInsets.only(left:30),
               child: Utility().BottomLine()),
             SizedBox(height: 20,),
-            _textInfo('${loggedInUser.email}','Email:', 18, Icons.email_outlined),
+            _textInfo('${loggedInUser.email}','Email:', 18, Icons.email_outlined, Color.fromARGB(255, 250, 142, 34)),
             SizedBox(height: 5,),
             Container(
               margin: EdgeInsets.only(left:30),
               child: Utility().BottomLine()),
             SizedBox(height: 30,),
-            _textInfoName('${loggedInUser.phoneNumber}','Số điện thoại', 18, Icons.phone),
+            _textInfoName('${loggedInUser.phoneNumber}','Số điện thoại', 18, Icons.phone, Color.fromARGB(255, 115, 240, 57)),
             SizedBox(height: 50,),
             
           ],
@@ -112,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
       ),
-      child: Icon(Icons.person, size: size,),
+      child: Icon(Icons.person, size: size, color: Color.fromARGB(255, 99, 216, 204),),
       height: height,
     );
   }
@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ));
   }
 
-  Widget _textInfo(String text, String textTitle,double fontSize, IconData icon) {
+  Widget _textInfo(String text, String textTitle,double fontSize, IconData icon, Color iconColor) {
     return Container(
       width: 350,
       height: 90,
@@ -136,8 +136,8 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             children: [
               Container(
-                margin: EdgeInsets.only(left: 19),
-                child: Icon(icon,size: fontSize+6,)),
+                margin: EdgeInsets.only(left: 15),
+                child: Icon(icon,size: fontSize+6, color: iconColor,)),
               Container(
                 margin: EdgeInsets.only(left: 15),
                 child: Text(textTitle, style: TextStyle(fontSize: fontSize),),),
@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _textInfoName(String text, String textTitle,double fontSize, IconData icon) {
+  Widget _textInfoName(String text, String textTitle,double fontSize, IconData icon, Color colorIcon) {
     return Container(
       width: 350,
       height: 40,
@@ -168,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Row(
             children: [
-              Expanded(child: Icon(icon,size: fontSize+6,)),
+              Expanded(child: Icon(icon,size: fontSize+6, color: colorIcon,)),
               Expanded(flex: 2,child: Text(textTitle, style: TextStyle(fontSize: fontSize),)),
               Expanded(flex: 3,child: Text(text, style: TextStyle(fontSize: fontSize),))]
           ),
