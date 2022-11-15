@@ -26,11 +26,6 @@ class _AllTaskPageState extends State<AllTaskPage> {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   TaskModel modelDetail = TaskModel();
-  bool editButtonPressed = false;
-
-  TextEditingController titleController = TextEditingController();
-  TextEditingController detailController = TextEditingController();
-  TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
@@ -121,11 +116,11 @@ class _AllTaskPageState extends State<AllTaskPage> {
                   child: ListTile(
                     onTap: () {
                       NavigationService()
-                      .navigateToScreen(DetailTaskPage(detailModel: item));
+                          .navigateToScreen(DetailTaskPage(detailModel: item));
                     },
                     title: Row(children: [
                       Expanded(
-                        flex: 4,
+                        flex: 2,
                         child: Text(
                           data['title'],
                           style: TextStyle(fontSize: 22),
@@ -143,15 +138,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
                                   color: Colors.amber,
                                   onPressed: () {},
                                 )),
-                      Expanded(
-                          child: IconButton(
-                        onPressed: () {
-                        },
-                        icon: Icon(
-                          Icons.edit,
-                          color: Colors.blueAccent,
-                        ),
-                      ))
+                      
                     ]),
                     subtitle: Container(
                       margin: EdgeInsets.only(top: 10, bottom: 10),
@@ -174,7 +161,7 @@ class _AllTaskPageState extends State<AllTaskPage> {
                         SizedBox(
                           height: 15,
                         ),
-                       Utility().BottomLine(),
+                        Utility().BottomLine(),
                         SizedBox(
                           height: 10,
                         ),
@@ -214,8 +201,26 @@ class _AllTaskPageState extends State<AllTaskPage> {
                           ],
                         ),
                         Row(
-                          children: [Expanded(child: Utility().BottomLine(),)],
-                        )
+                          children: [
+                            Expanded(
+                              child: Utility().BottomLine(),
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children:[
+                            IconButton(
+                            onPressed: () {
+                              createPopUpSureDelete(data['uid']);
+                            },
+                            icon: Icon(
+                            Icons.delete_forever,
+                            color: Colors.redAccent,
+                            size: 30,
+                            ),
+                          ),                           
+                            SizedBox(width: 22,),])
                       ]),
                     ),
                   ),
@@ -228,108 +233,51 @@ class _AllTaskPageState extends State<AllTaskPage> {
     );
   }
 
-  void showDialogDetailTask(TaskModel model) {
+  void createPopUpSureDelete(String uid) {
     showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(
+            content: Container(
+              width: 150,
+              height: 50,
+              child: Center(
+                child: Text('Bạn có muốn xoá công việc này ?', style: TextStyle(fontSize: 21),),
+              ),
+            ),
             actions: [
               TextButton.icon(
-                icon: Icon(
-                  Icons.clear_outlined,
-                  color: Color.fromARGB(255, 255, 0, 0),
-                  size: 30,
-                ),
-                onPressed: () {
-                  setState(() {
-                    editButtonPressed = false;
-                  });
-                  NavigationService().goBack();
-                },
-                label: Text(
-                  '',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 255, 0, 0), fontSize: 18),
-                ),
-              ),
+                  onPressed: () {
+                    DeleteTask(uid);
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.delete_forever,
+                    color: Colors.redAccent,
+                    size: 30,
+                  ),
+                  label: Text('Xoá', style: TextStyle(fontSize: 21, color: Colors.redAccent))),
+              TextButton.icon(
+                  onPressed: () {
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.clear_outlined,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                  label: Text('Không', style: TextStyle(fontSize: 21, color: Colors.grey),))
             ],
-            title: Text(
-              'Chi tiết',
-              style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
-            ),
-            content: SingleChildScrollView(
-              child: Column(
-                children: [
-                  (editButtonPressed)
-                      ? Row(children: [
-                          Container(
-                            height: 60,
-                            width: 200,
-                            child: Utility().TextFieldCustom(
-                                '${modelDetail.title}',
-                                titleController,
-                                Icon(
-                                  Icons.text_fields_outlined,
-                                )),
-                          ),
-                          TextButton.icon(
-                              onPressed: (() {
-                                setState(() {
-                                  editButtonPressed = !editButtonPressed;
-                                });
-                                NavigationService().goBack();
-                                showDialogDetailTask(modelDetail);
-                              }),
-                              icon: Icon(Icons.edit),
-                              label: Text(''))
-                        ])
-                      : Row(children: [
-                          Container(
-                            height: 60,
-                            width: 200,
-                            child: Utility().TextFieldCustomReadOnly(
-                                '${modelDetail.title}',
-                                Icon(
-                                  Icons.text_fields_outlined,
-                                )),
-                          ),
-                          TextButton.icon(
-                              onPressed: (() {
-                                setState(() {
-                                  editButtonPressed = !editButtonPressed;
-                                });
-                                NavigationService().goBack();
-                                showDialogDetailTask(modelDetail);
-                              }),
-                              icon: Icon(Icons.edit),
-                              label: Text(''))
-                        ])
-                ],
-              ),
-            ),
           );
         });
   }
 
-  setStateController() {
-    setState(() {
-      titleController.text = modelDetail.title.toString();
-    });
-    print('get title controller : done ${titleController.text}');
-    showDialogDetailTask(modelDetail);
-  }
-
-  Future<void> getTaskById(String uid) async {
-    FirebaseFirestore.instance
+  void DeleteTask(String uid) {
+    firebaseFirestore
         .collection("users")
         .doc(user!.uid)
         .collection("tasks")
         .doc(uid)
-        .get()
-        .then((value) {
-      modelDetail = TaskModel.fromMap(value.data());
-      setStateController();
-      setState(() {});
-    });
+        .delete();
   }
 }
