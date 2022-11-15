@@ -138,7 +138,6 @@ class _AllTaskPageState extends State<AllTaskPage> {
                                   color: Colors.amber,
                                   onPressed: () {},
                                 )),
-                      
                     ]),
                     subtitle: Container(
                       margin: EdgeInsets.only(top: 10, bottom: 10),
@@ -208,19 +207,34 @@ class _AllTaskPageState extends State<AllTaskPage> {
                           ],
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children:[
-                            IconButton(
-                            onPressed: () {
-                              createPopUpSureDelete(data['uid']);
-                            },
-                            icon: Icon(
-                            Icons.delete_forever,
-                            color: Colors.redAccent,
-                            size: 30,
-                            ),
-                          ),                           
-                            SizedBox(width: 22,),])
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton.icon(
+                                label: Text(''),
+                                onPressed: () {
+                                  doneTask(data['uid']);
+                                },
+                                icon: Icon(
+                                  Icons.done_all,
+                                  color: Color.fromARGB(255, 33, 242, 141),
+                                  size: 30,
+                                ),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  createPopUpSureDelete(data['uid']);
+                                },
+                                icon: Icon(
+                                  Icons.delete_forever,
+                                  color: Colors.redAccent,
+                                  size: 30,
+                                ),
+                                label: Text(''),
+                              ),
+                              SizedBox(
+                                width: 22,
+                              ),
+                            ])
                       ]),
                     ),
                   ),
@@ -242,7 +256,10 @@ class _AllTaskPageState extends State<AllTaskPage> {
               width: 150,
               height: 50,
               child: Center(
-                child: Text('Bạn có muốn xoá công việc này ?', style: TextStyle(fontSize: 21),),
+                child: Text(
+                  'Bạn có muốn xoá công việc này ?',
+                  style: TextStyle(fontSize: 21),
+                ),
               ),
             ),
             actions: [
@@ -256,7 +273,8 @@ class _AllTaskPageState extends State<AllTaskPage> {
                     color: Colors.redAccent,
                     size: 30,
                   ),
-                  label: Text('Xoá', style: TextStyle(fontSize: 21, color: Colors.redAccent))),
+                  label: Text('Xoá',
+                      style: TextStyle(fontSize: 21, color: Colors.redAccent))),
               TextButton.icon(
                   onPressed: () {
                     NavigationService().goBack();
@@ -266,7 +284,10 @@ class _AllTaskPageState extends State<AllTaskPage> {
                     color: Colors.grey,
                     size: 30,
                   ),
-                  label: Text('Không', style: TextStyle(fontSize: 21, color: Colors.grey),))
+                  label: Text(
+                    'Không',
+                    style: TextStyle(fontSize: 21, color: Colors.grey),
+                  ))
             ],
           );
         });
@@ -279,5 +300,18 @@ class _AllTaskPageState extends State<AllTaskPage> {
         .collection("tasks")
         .doc(uid)
         .delete();
+  }
+
+  void doneTask(String uid) {
+    DateTime doneDate = DateTime.now();
+    firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("tasks")
+        .doc(uid)
+        .set({
+      'isDone': 'true',
+      'doneDate': TaskModel().formatDate(doneDate),
+    });
   }
 }

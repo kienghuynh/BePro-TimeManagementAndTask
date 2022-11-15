@@ -682,7 +682,9 @@ class _TaskPageState extends State<TaskPage> {
                   alignment: Alignment.centerLeft,
                   child: Row(children: [
                     TimePickerStartDate(),
-                    pressedStartDate ? _displayDateTime(startDate!) : Text('')
+                    pressedStartDate
+                        ? Utility().DisplayDateTime(startDate!)
+                        : Text('')
                   ]),
                 ),
                 Container(
@@ -691,7 +693,9 @@ class _TaskPageState extends State<TaskPage> {
                   alignment: Alignment.centerLeft,
                   child: Row(children: [
                     TimePickerDeadline(),
-                    pressedDeadline ? _displayDateTime(deadline!) : Text('')
+                    pressedDeadline
+                        ? Utility().DisplayDateTime(deadline!)
+                        : Text('')
                   ]),
                 ),
                 Container(
@@ -806,7 +810,7 @@ class _TaskPageState extends State<TaskPage> {
           pressedDeadline = true;
           DatePicker.showDateTimePicker(context,
               showTitleActions: true,
-              minTime: DateTime(2000, 1, 1),
+              minTime: startDate,
               maxTime: DateTime(2099, 12, 31),
               onChanged: (date) {}, onConfirm: (date) {
             deadline = date;
@@ -836,7 +840,7 @@ class _TaskPageState extends State<TaskPage> {
     task.colorCode = random.nextInt(9).toString();
     task.createAt = DateTime.now();
     task.deadline = deadline;
-    task.doneDate = startDate!.add(Duration(days: 1));
+    task.doneDate = DateTime(0001, 01, 01, 01, 01, 01);
     task.isDone = false;
     task.isImportant = isImportant;
     task.note = noteController.text;
@@ -851,24 +855,14 @@ class _TaskPageState extends State<TaskPage> {
           .set(task.toMap());
       print(countAllTask);
       Fluttertoast.showToast(msg: "Đã thêm 1 công việc");
-    }
-    else(Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu và kết thúc'));
+    } else
+      (Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu và kết thúc'));
   }
 
   void cancel() {
     titleController.text = '';
     detailController.text = '';
     noteController.text = '';
-  }
-
-  @override
-  Widget _displayDateTime(DateTime date) {
-    return Center(
-        child: Text(
-      "${date.hour}:${date.minute} ${date.day}/${date.month}/${date.year}",
-      style: TextStyle(
-          fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500),
-    ));
   }
 
   Future<bool> onButtonTapped(bool isLiked) async {
