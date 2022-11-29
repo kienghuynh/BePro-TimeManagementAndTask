@@ -1,3 +1,4 @@
+import 'package:bepro/Utility/CustomPickerMonth.dart';
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/pages/detailTask_page.dart';
@@ -550,19 +551,4 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
   }
 }
 
-class CustomMonthPicker extends DatePickerModel {
-  CustomMonthPicker({
-    DateTime? currentTime,
-    DateTime? minTime,
-    DateTime? maxTime,
-  }) : super(
-            locale: LocaleType.vi,
-            minTime: minTime,
-            maxTime: maxTime,
-            currentTime: currentTime);
 
-  @override
-  List<int> layoutProportions() {
-    return [1, 1, 0];
-  }
-}
