@@ -15,7 +15,7 @@ import 'package:bepro/services/navigation_service.dart';
 import 'package:bepro/widget/home_page/clock_text.dart';
 import 'package:bepro/widget/home_page/clock_text_week.dart';
 import 'package:bepro/widget/home_page/dropDown_Categories.dart';
-import 'package:bepro/widget/utilities.dart';
+import 'package:bepro/Utility/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/container.dart';

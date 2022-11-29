@@ -1,5 +1,5 @@
 import 'package:bepro/services/navigation_service.dart';
-import 'package:bepro/widget/utilities.dart';
+import 'package:bepro/Utility/utilities.dart';
 import 'package:bepro/widget/visualize_page/groupsBarChart.dart';
 import 'package:bepro/widget/visualize_page/groupsBarTime.dart';
 import 'package:bepro/widget/visualize_page/pieDoneChart.dart';

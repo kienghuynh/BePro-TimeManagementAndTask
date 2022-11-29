@@ -2,7 +2,7 @@
 
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
-import 'package:bepro/widget/utilities.dart';
+import 'package:bepro/Utility/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
