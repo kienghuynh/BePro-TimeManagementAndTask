@@ -8,6 +8,7 @@ class TaskModel {
   String? title;
   String? detail;
   String? note;
+  String? category;
   DateTime? startDate;
   DateTime? deadline;
   DateTime? doneDate;
@@ -21,6 +22,7 @@ class TaskModel {
       this.title,
       this.detail,
       this.note,
+      this.category,
       this.startDate,
       this.deadline,
       this.doneDate,
@@ -35,6 +37,7 @@ class TaskModel {
         title: json['title'],
         detail: json['detail'],
         note: json['note'],
+        category: json['category'],
         startDate: DateFormat('dd/MM/yyyy hh:mm:ss').parse(json['startDate']),
         deadline: DateFormat('dd/MM/yyyy hh:mm:ss').parse(json['deadline']),
         doneDate: DateFormat('dd/MM/yyyy hh:mm:ss').parse(json['doneDate']),
@@ -51,6 +54,7 @@ class TaskModel {
       title: map['title'],
       detail: map['detail'],
       note: map['note'],
+      category: map['category'],
       startDate: DateFormat('dd/MM/yyyy hh:mm:ss').parse(map['startDate']),
       deadline: DateFormat('dd/MM/yyyy hh:mm:ss').parse(map['deadline']),
       doneDate: DateFormat('dd/MM/yyyy hh:mm:ss').parse(map['doneDate']),
@@ -79,6 +83,7 @@ class TaskModel {
       'title': title,
       'detail': detail,
       'note': note,
+      'category': category,
       'startDate': (startDate==null) ? "" : formatDate(startDate),
       'deadline': (deadline==null) ? "" : formatDate(deadline),
       'doneDate': (doneDate==null) ? "" : formatDate(doneDate),

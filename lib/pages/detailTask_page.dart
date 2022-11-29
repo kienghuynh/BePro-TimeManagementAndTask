@@ -149,6 +149,24 @@ class _DetailTaskPageState extends State<DetailTaskPage> {
               SizedBox(
                 height: 20,
               ),
+
+              
+              
+              Utility().BottomLine(),
+              SizedBox(
+                height: 20,
+              ),
+              Utility().DisplayTextDetail(
+                      Icons.note_alt,
+                      widget.detailModel.category!,
+                      18,
+                      FontWeight.normal,
+                      Color.fromARGB(255, 37, 37, 37)),
+              SizedBox(
+                height: 20,
+              ),
+
+
               Utility().BottomLine(),
               SizedBox(
                 height: 20,

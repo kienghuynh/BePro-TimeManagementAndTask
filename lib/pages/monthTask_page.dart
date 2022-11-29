@@ -9,16 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-class CurrentWeekPage extends StatefulWidget {
-  const CurrentWeekPage({super.key});
+class MonthTaskPage extends StatefulWidget {
+  const MonthTaskPage({super.key});
 
   @override
-  State<CurrentWeekPage> createState() => _CurrentWeekPageState();
+  State<MonthTaskPage> createState() => _MonthTaskPageState();
 }
 
-class _CurrentWeekPageState extends State<CurrentWeekPage> {
+class _MonthTaskPageState extends State<MonthTaskPage> {
+  DateTime? selectedMonth;
   final User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   final _formKey = GlobalKey<FormState>();
@@ -27,6 +28,9 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   TaskModel modelDetail = TaskModel();
+
+  DateTime? startDate;
+  DateTime? deadline;
 
   @override
   void initState() {
@@ -46,9 +50,21 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
         ),
         backgroundColor: Colors.white,
         title: const Text(
-          'Danh sách việc trong tuần',
+          'Danh sách công việc ',
           style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
         ),
+        actions: [
+          TextButton.icon(
+              onPressed: () {
+                showPickerMonth();
+              },
+              icon: Icon(
+                Icons.search_outlined,
+                size: 34,
+                color: Color.fromARGB(255, 99, 216, 204),
+              ),
+              label: Text(''))
+        ],
       ),
       body: _pageWidget(),
     ));
@@ -57,21 +73,48 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
   Widget _pageWidget() {
     return Container(
       child: SingleChildScrollView(
-          child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [list()],
-        ),
-      )),
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              disPlayCurrentTime(),
+              (startDate == null || deadline == null)
+                  ? list(DateTime(DateTime.now().year,DateTime.now().month,1,0,0,0),
+                      DateTime(DateTime.now().year,DateTime.now().month+1,0,0,0,0))
+                  : list(startDate!, deadline!)
+            ],
+          )),
     );
   }
 
-  Widget list() {
+  Widget disPlayCurrentTime(){
+    return Container(
+      margin: EdgeInsets.only(top: 10, bottom: 10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+        borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+          color: Color.fromARGB(149, 194, 194, 194)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 5,
+              spreadRadius: 1,
+              offset: Offset(4, 4))
+      ]),
+      child: (startDate == null || deadline == null) 
+        ? Text('Danh sách công việc cho tháng ${DateTime.now().month}', style: TextStyle( fontSize: 18),)
+        : Text('Danh sách công việc cho tháng ${startDate!.month}', style: TextStyle( fontSize: 18),)
+    );
+  }
+
+  Widget list(DateTime startDate, DateTime deadline) {
     Stream<QuerySnapshot> _taskStream = FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
         .collection('tasks')
-        .orderBy('createAt', descending: false)
+        .orderBy('createAt', descending: true)
+        //.where("isImportant",isEqualTo: true)
         .snapshots(includeMetadataChanges: true);
     return Container(
       height: 630,
@@ -85,6 +128,10 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
             return Center(
               child: CircularProgressIndicator(),
             );
+          } else if (startDate == null || deadline == null) {
+            return Center(
+              child: Text(''),
+            );
           } else {
             return ListView(
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -92,10 +139,12 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
                     document.data()! as Map<String, dynamic>;
                 TaskModel item = TaskModel().fromJson(data);
                 // debugPrint(item.toMap().toString());
-
                 return Container(
-                    child: (compareWeekTask(
-                            data['startDate'], data['deadline']))
+                    child: (Utility().compareRangeTime(
+                            data['startDate'],
+                            data['deadline'],
+                            startDate.toString(),
+                            deadline.toString()))
                         ? Container(
                             margin: EdgeInsets.only(bottom: 10,left: 10, right: 10),
                             padding: EdgeInsets.all(10),
@@ -213,7 +262,7 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
                                         TextButton.icon(
                                           label: Text(''),
                                           onPressed: () {
-                                            doneTask(data['uid']);
+                                            createPopUpDone(data['uid']);
                                           },
                                           icon: Icon(
                                             Icons.done_all,
@@ -248,17 +297,6 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
         },
       ),
     );
-  }
-
-  bool compareWeekTask(String startDate, String deadline) {
-    DateTime now = DateTime.now();
-    int currentDay = now.weekday;
-    DateTime start = DateFormat('dd/MM/yyyy hh:mm:ss').parse(startDate);
-    DateTime dead = DateFormat('dd/MM/yyyy hh:mm:ss').parse(deadline);
-    DateTime firstDayOfWeek = now.subtract(Duration(days: currentDay - 1));
-    DateTime endDayOfWeek = firstDayOfWeek.add(Duration(days: 6));
-    return Utility()
-        .compareRangeTimeDate(start, dead, firstDayOfWeek, endDayOfWeek);
   }
 
   void createPopUpSureDelete(String uid) {
@@ -307,6 +345,174 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
         });
   }
 
+  void createPopUpDone(String uid) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: Container(
+              width: 150,
+              height: 50,
+              child: Center(
+                child: Text(
+                  'Bạn đã hoàn thành công việc này ?',
+                  style: TextStyle(fontSize: 21),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton.icon(
+                  onPressed: () {
+                    doneTask(uid);
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.done_all,
+                    color: Color.fromARGB(255, 113, 231, 111),
+                    size: 30,
+                  ),
+                  label: Text('Hoàn thành',
+                      style: TextStyle(
+                          fontSize: 21,
+                          color: Color.fromARGB(255, 113, 231, 111)))),
+              TextButton.icon(
+                  onPressed: () {
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.clear_outlined,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                  label: Text(
+                    'Không',
+                    style: TextStyle(fontSize: 21, color: Colors.grey),
+                  ))
+            ],
+          );
+        });
+  }
+
+  Widget TimePickerStartDate() {
+    return TextButton.icon(
+      onPressed: () {
+        setState(() {
+          DatePicker.showDatePicker(context,
+              showTitleActions: true,
+              minTime: DateTime(2000, 1, 1),
+              maxTime: DateTime(2099, 12, 31),
+              onChanged: (date) {}, onConfirm: (date) {
+            startDate = date;
+            NavigationService().goBack();
+            showDialogPickRange();
+            setState(() {});
+          },
+              currentTime: (startDate == null) ? DateTime.now() : startDate,
+              locale: LocaleType.vi);
+        });
+      },
+      label: Text(
+        'Từ',
+        style: TextStyle(color: Colors.blue, fontSize: 18),
+      ),
+      icon: Icon(Icons.access_time),
+    );
+  }
+
+  Widget TimePickerDeadline() {
+    return TextButton.icon(
+      onPressed: () {
+        setState(() {
+          DatePicker.showDatePicker(context,
+              showTitleActions: true,
+              minTime: startDate?.add(Duration(days: 1)),
+              maxTime: DateTime(2099, 12, 31),
+              onChanged: (date) {}, onConfirm: (date) {
+            deadline = date;
+            NavigationService().goBack();
+            showDialogPickRange();
+            setState(() {});
+          },
+              currentTime: (deadline == null) ? startDate : deadline,
+              locale: LocaleType.vi);
+        });
+      },
+      label: Text(
+        'Đến',
+        style: TextStyle(color: Colors.blue, fontSize: 18),
+      ),
+      icon: Icon(Icons.access_time),
+    );
+  }
+
+  void showDialogPickRange() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(
+            'Chọn thời gian',
+            style: TextStyle(color: Colors.blue),
+          ),
+          content: Container(
+            height: 100,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 200,
+                      alignment: Alignment.centerLeft,
+                      child: Row(children: [
+                        TimePickerStartDate(),
+                        (startDate != null)
+                            ? Utility().DisplayDate(startDate!)
+                            : Text('')
+                      ]),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 200,
+                      alignment: Alignment.centerLeft,
+                      child: Row(children: [
+                        TimePickerDeadline(),
+                        (deadline != null)
+                            ? Utility().DisplayDate(deadline!)
+                            : Text('')
+                      ]),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton.icon(
+              icon: Icon(
+                Icons.done_all,
+                color: Color.fromARGB(255, 0, 177, 6),
+                size: 30,
+              ),
+              onPressed: () {
+                NavigationService().goBack();
+              },
+              label: Text(
+                '',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 0, 177, 6), fontSize: 18),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void DeleteTask(String uid) {
     firebaseFirestore
         .collection("users")
@@ -324,8 +530,39 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
         .collection("tasks")
         .doc(uid)
         .set({
-      'isDone': 'true',
+      'isDone': true,
       'doneDate': TaskModel().formatDate(doneDate),
-    });
+    }, SetOptions(merge: true));
+  }
+
+  void showPickerMonth() {
+    DatePicker.showPicker(context,
+        pickerModel: CustomMonthPicker(
+            minTime: DateTime(2000),
+            maxTime: DateTime(2099),
+            currentTime: DateTime.now()),
+        onChanged: (month) {}, onConfirm: (month) {
+      setState(() {
+        startDate = DateTime(month.year, month.month, 1);
+        deadline = DateTime(month.year, month.month + 1, 0);
+      });
+    }, locale: LocaleType.vi);
+  }
+}
+
+class CustomMonthPicker extends DatePickerModel {
+  CustomMonthPicker({
+    DateTime? currentTime,
+    DateTime? minTime,
+    DateTime? maxTime,
+  }) : super(
+            locale: LocaleType.vi,
+            minTime: minTime,
+            maxTime: maxTime,
+            currentTime: currentTime);
+
+  @override
+  List<int> layoutProportions() {
+    return [1, 1, 0];
   }
 }

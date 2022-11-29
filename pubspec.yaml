@@ -63,6 +63,13 @@ dependencies:
   # button important of task
   like_button: ^2.0.5
 
+  get: ^4.6.5
+
+  #alarm
+  #flutter_local_notifications: ^12.0.4
+
+
+
   #chart
   syncfusion_flutter_charts: ^20.3.57
 
@@ -71,6 +78,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_localizations:
     sdk: flutter
+  flutter_cupertino_date_picker: ^1.0.26+2
 
 dev_dependencies:
   flutter_test:

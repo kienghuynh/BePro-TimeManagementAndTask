@@ -14,6 +14,7 @@ class _ClockTextState extends State<ClockText> {
     return TimerBuilder.periodic(Duration(milliseconds: 100),
         builder: (context) {
       var currentTime = DateTime.now();
+      String year = currentTime.year.toString();
       String month = currentTime.month < 10
           ? "Tháng 0${currentTime.month}"
           : "Tháng ${currentTime.month}";
@@ -40,18 +41,16 @@ class _ClockTextState extends State<ClockText> {
         default:
           dayweek = "Chủ nhật";
       }
-      String day = currentTime.day < 10
-          ? "0${currentTime.day}"
-          : "${currentTime.day}";
+      String day =
+          currentTime.day < 10 ? "0${currentTime.day}" : "${currentTime.day}";
       return Container(
-        padding: EdgeInsets.only(left: 30),
-        child: Column(children: [
-          Text("$dayweek, $day $month",
-            style: TextStyle(height: 2.7, fontSize: 16)),
-          
-        ],)
-        
-      );
+          padding: EdgeInsets.only(left: 30),
+          child: Column(
+            children: [
+              Text("$dayweek, $day $month năm $year",
+                  style: TextStyle(height: 2.7, fontSize: 16)),
+            ],
+          ));
     });
   }
 }

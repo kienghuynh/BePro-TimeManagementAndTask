@@ -31,9 +31,9 @@ class _LoginPageState extends State<LoginPage> {
       //   gradient: LinearGradient(colors: [
       //     Color.fromARGB(255, 221, 181, 73),
       //     Color.fromARGB(255, 99, 216, 204)
-      //   ], 
+      //   ],
       //   begin: Alignment.topLeft, end: Alignment.bottomRight),
-        
+
       // ),
       child: Scaffold(
         //backgroundColor: Colors.transparent,
@@ -67,8 +67,8 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 _extraWelcomeText(),
                 _image('assets/background-login.png', 300),
-                _EmailField(
-                    'Tài khoản Email ...', emailController, const Icon(Icons.mail)),
+                _EmailField('Tài khoản Email ...', emailController,
+                    const Icon(Icons.mail)),
                 const SizedBox(height: 20),
                 _PasswordField(
                     'Mật khẩu ...', passwordController, const Icon(Icons.key)),
@@ -79,7 +79,6 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _extraText(),
-                    
                   ],
                 ),
                 _createTextButton(),
@@ -186,10 +185,11 @@ class _LoginPageState extends State<LoginPage> {
       'Chào mừng bạn đến với BePro !',
       textAlign: TextAlign.center,
       style: TextStyle(
-          fontSize: 34, color: Color.fromARGB(255, 99, 216, 204), fontWeight: FontWeight.bold),
+          fontSize: 34,
+          color: Color.fromARGB(255, 99, 216, 204),
+          fontWeight: FontWeight.bold),
     );
   }
-
 
   Widget _extraText() {
     return const Text(
@@ -217,8 +217,19 @@ class _LoginPageState extends State<LoginPage> {
             style:
                 TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0))),
         onPressed: () {
-          //NavigationService().navigateToScreen(RegisterPage());
+          resetPassword(emailController.text);
         });
+  }
+
+  void resetPassword(String email) async {
+    if (emailController.text == "") {
+      Fluttertoast.showToast(toastLength: Toast.LENGTH_LONG,msg: 'vui lập nhập email khi tạo mới mật khẩu');
+    } else {
+      await _auth.sendPasswordResetEmail(email: email);
+      Fluttertoast.showToast(
+          toastLength: Toast.LENGTH_LONG,
+          msg: 'vui lòng truy cập vào email trên trình duyệt để đổi mật khẩu');
+    }
   }
 
   void signIn(String email, String password) async {
@@ -233,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":
-          errorMessage = "Địa chỉ email của bạng không đúng định dạng.";
+            errorMessage = "Địa chỉ email của bạng không đúng định dạng.";
 
             break;
           case "wrong-password":
@@ -258,5 +269,4 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
-  
 }

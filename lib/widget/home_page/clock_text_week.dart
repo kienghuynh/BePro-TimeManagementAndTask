@@ -19,30 +19,30 @@ class _ClockTextWeekState extends State<ClockTextWeek> {
       switch (currentTime.weekday) {
         case 1:
           day = "Thứ hai";
-          bonusDay = 7;
+          bonusDay = 0;
           break;
         case 2:
           day = "Thứ ba";
-          bonusDay = 6;
+          bonusDay = -1;
           break;
         case 3:
           day = "Thứ tư";
-          bonusDay = 5;
+          bonusDay = -2;
           break;
         case 4:
           day = "Thứ năm";
-          bonusDay = 4;
+          bonusDay = -3;
           break;
         case 5:
           day = "Thứ sáu";
-          bonusDay = 3;
+          bonusDay = -4;
           break;
         case 6:
           day = "Thứ bảy";
-          bonusDay = 2;
+          bonusDay = -5;
           break;
         default:
-          bonusDay = 1;
+          bonusDay = -6;
           day = "Chủ nhật";
       }
       var nextWeekFromNow = currentTime.add(Duration(days: bonusDay));
@@ -63,7 +63,8 @@ class _ClockTextWeekState extends State<ClockTextWeek> {
           padding: EdgeInsets.only(left: 30),
           child: Column(
             children: [
-              Text("${nextWeek_dayDisplay} ${nextWeek_monthDisplay} - ${seven_dayDisplay} ${sevenday_monthDisplay}",
+              Text(
+                  "${nextWeek_dayDisplay} ${nextWeek_monthDisplay} - ${seven_dayDisplay} ${sevenday_monthDisplay} năm ${sevenDayFromNextWeek.year}",
                   style: TextStyle(height: 2.7, fontSize: 16)),
             ],
           ));

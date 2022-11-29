@@ -37,12 +37,6 @@ class _TodayPageState extends State<TodayPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        // decoration: const BoxDecoration(
-        //   gradient: LinearGradient(colors: [
-        //     Color.fromARGB(255, 221, 181, 73),
-        //     Color.fromARGB(255, 99, 216, 204)
-        //   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        // ),
         child: Scaffold(
       //backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -65,7 +59,7 @@ class _TodayPageState extends State<TodayPage> {
       child: SingleChildScrollView(
           child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [list()],
         ),
       )),
@@ -81,7 +75,7 @@ class _TodayPageState extends State<TodayPage> {
         .snapshots(includeMetadataChanges: true);
     return Container(
       height: 630,
-      margin: EdgeInsets.all(15),
+      margin: EdgeInsets.only(top: 15,bottom:10, left: 15, right: 15),
       child: StreamBuilder<QuerySnapshot>(
         stream: _taskStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -257,15 +251,21 @@ class _TodayPageState extends State<TodayPage> {
   }
 
   bool compareTodayTask(String startDate, String deadline) {
-    DateTime start = DateFormat('dd/MM/yyyy hh:mm:ss').parse(startDate);
-    DateTime end = DateFormat('dd/MM/yyyy hh:mm:ss').parse(deadline);
-    DateTime today = DateTime.now();
-    if (start.day == today.day || end.day == today.day) return true;
-    if (start.compareTo(today) < 0 && end.compareTo(today) > 0) {
-      return true;
-    } else {
+    DateTime start = DateFormat('dd/MM/yyyy').parse(startDate);
+    DateTime end = DateFormat('dd/MM/yyyy').parse(deadline);
+    DateTime now = DateTime.now();
+    DateTime startToday = DateTime(now.year, now.month, now.day, 0, 0, 0);
+
+    if (start.year != startToday.year || end.year != startToday.year)
+      {return false;}
+    if (start.month != startToday.month || end.month != startToday.month) {
       return false;
     }
+    //bat dau hom nay hoac ket thuc hom nay
+    if (start.day == startToday.day || end.day == startToday.day) return true;
+    //bao gom ca hom nay
+    if (start.compareTo(startToday) < 0 && end.compareTo(startToday.add(Duration(hours: 23,minutes: 59,seconds: 59))) > 0) return true;
+    return false;
   }
 
   void createPopUpSureDelete(String uid) {
@@ -331,8 +331,9 @@ class _TodayPageState extends State<TodayPage> {
         .collection("tasks")
         .doc(uid)
         .set({
-      'isDone': 'true',
+      'isDone': true,
       'doneDate': TaskModel().formatDate(doneDate),
-    });
+      
+    },SetOptions(merge: true));
   }
 }

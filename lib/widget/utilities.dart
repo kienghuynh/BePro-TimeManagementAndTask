@@ -1,6 +1,7 @@
 import 'package:bepro/pages/task_page.dart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 
 class Utility {
@@ -39,18 +40,18 @@ class Utility {
     );
   }
 
-  Widget TextFieldEdit(
-       double fontSize, FontWeight fontWeight, TextEditingController controller, Icon icon, Color colorText) {
+  Widget TextFieldEdit(double fontSize, FontWeight fontWeight,
+      TextEditingController controller, Icon icon, Color colorText) {
     var border = OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
         borderSide: const BorderSide(color: Colors.transparent));
 
     return TextFormField(
-      
       expands: true,
       maxLines: null,
       keyboardType: TextInputType.multiline,
-      style: TextStyle(color: colorText, fontSize: fontSize, fontWeight: fontWeight),
+      style: TextStyle(
+          color: colorText, fontSize: fontSize, fontWeight: fontWeight),
       controller: controller,
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -123,7 +124,10 @@ class Utility {
         child: Text(
           text,
           style: TextStyle(
-              fontSize: fontSize, fontWeight: fontWeight, color: colorText, fontStyle: FontStyle.italic),
+              fontSize: fontSize,
+              fontWeight: fontWeight,
+              color: colorText,
+              fontStyle: FontStyle.italic),
         ),
       ),
     ]);
@@ -148,16 +152,22 @@ class Utility {
               color: Color.fromARGB(255, 70, 70, 70)),
         ),
       ),
-      
     ]);
   }
-
-  
 
   Widget DisplayDateTime(DateTime date) {
     return Center(
         child: Text(
       "${date.hour}:${date.minute} ${date.day}/${date.month}/${date.year}",
+      style: TextStyle(
+          fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500),
+    ));
+  }
+
+  Widget DisplayDate(DateTime date) {
+    return Center(
+        child: Text(
+      "${date.day}/${date.month}/${date.year}",
       style: TextStyle(
           fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500),
     ));
@@ -171,5 +181,88 @@ class Utility {
     String second = date.second < 10 ? "0${date.second}" : "${date.second}";
 
     return "$hour:$minute ngày $day/$month/${date.year}";
+  }
+
+  bool compareToday(String startDate, String deadline) {
+    DateTime start = DateFormat('yyyy-MM-dd hh:mm:ss').parse(startDate);
+    DateTime end = DateFormat('yyyy-MM-dd hh:mm:ss').parse(deadline);
+    DateTime now = DateTime.now();
+    DateTime startToday = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    print(startToday);
+
+    if (start.year != startToday.year || end.year != startToday.year) {
+      return false;
+    }
+    if (start.month != startToday.month || end.month != startToday.month) {
+      return false;
+    }
+    //bat dau hom nay hoac ket thuc hom nay
+    if (start.day == startToday.day || end.day == startToday.day) return true;
+    //bao gom ca hom nay
+    if (start.compareTo(startToday) < 0 &&
+        end.compareTo(
+                startToday.add(Duration(hours: 23, minutes: 59, seconds: 59))) >
+            0) return true;
+    return false;
+  }
+
+  bool compareRangeTime(
+      String startDate, String deadline, String iStartRange, String iEndRange) {
+    DateTime start = DateFormat('dd/MM/yyyy hh:mm:ss').parse(startDate);
+    DateTime end = DateFormat('dd/MM/yyyy hh:mm:ss').parse(deadline);
+    DateTime startRange = DateFormat('yyyy-MM-dd hh:mm:ss').parse(iStartRange);
+    DateTime endRange = DateFormat('yyyy-MM-dd hh:mm:ss').parse(iEndRange);
+    DateTime startRange_withoutTime =
+        DateTime(startRange.year, startRange.month, startRange.day, 0, 0, 0);
+    DateTime endRange_fullday =
+        DateTime(endRange.year, endRange.month, endRange.day, 23, 59, 59);
+
+    
+
+    if (start.compareTo(startRange_withoutTime) < 0 &&
+        end.compareTo(endRange_fullday) > 0) {
+      return true;
+    }
+    if (start.compareTo(startRange_withoutTime) < 0 &&
+        end.compareTo(startRange_withoutTime) > 0) {
+      return true;
+    }
+    if (start.compareTo(endRange_fullday) < 0 &&
+        end.compareTo(endRange_fullday) > 0) {
+      return true;
+    }
+    if (start.compareTo(startRange_withoutTime) > 0 &&
+        end.compareTo(endRange_fullday) < 0) {
+      return true;
+    }
+    return false;
+  }
+  
+  bool compareRangeTimeDate(
+      DateTime startDate, DateTime deadline, DateTime iStartRange, DateTime iEndRange) {
+    
+    DateTime startRange_withoutTime =
+        DateTime(iStartRange.year, iStartRange.month, iStartRange.day, 0, 0, 0);
+    DateTime endRange_fullday =
+        DateTime(iEndRange.year, iEndRange.month, iEndRange.day, 23, 59, 59);
+   
+
+    if (startDate.compareTo(startRange_withoutTime) < 0 &&
+        deadline.compareTo(endRange_fullday) > 0) {
+      return true;
+    }
+    if (startDate.compareTo(startRange_withoutTime) < 0 &&
+        deadline.compareTo(startRange_withoutTime) > 0) {
+      return true;
+    }
+    if (startDate.compareTo(endRange_fullday) < 0 &&
+        deadline.compareTo(endRange_fullday) > 0) {
+      return true;
+    }
+    if (startDate.compareTo(startRange_withoutTime) > 0 &&
+        deadline.compareTo(endRange_fullday) < 0) {
+      return true;
+    }
+    return false;
   }
 }

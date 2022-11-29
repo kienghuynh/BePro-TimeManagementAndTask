@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:uuid/uuid.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -39,19 +39,16 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Scaffold(
         //backgroundColor: Colors.transparent,
         appBar: AppBar(
-          //disable icon turn back in leading : flase
-          //automaticallyImplyLeading: true,
-          leading: const BackButton(
-            color: Color.fromARGB(255, 99, 216, 204),
-          ),
-          backgroundColor: Colors.white,
-          title: (
-              const Text(
+            //disable icon turn back in leading : flase
+            //automaticallyImplyLeading: true,
+            leading: const BackButton(
+              color: Color.fromARGB(255, 99, 216, 204),
+            ),
+            backgroundColor: Colors.white,
+            title: (const Text(
               'Đăng ký',
               style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
-            )
-          
-        )),
+            ))),
         body: _pageWidget(),
       ),
     );
@@ -244,9 +241,9 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       validator: (value) {
         if (value!.isEmpty) return ('Vui lòng nhập họ và tên');
-        if (!RegExp(r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$")
-            .hasMatch(value)) {
-          return ('Họ và tên không hợp lệ.');
+        for (var i = 0; i < value.length; i++) {
+          if (value[i].contains(RegExp(r'[0-9]')))
+            return ('Họ và tên không chứa số ');
         }
         return null;
       },
@@ -358,6 +355,8 @@ class _RegisterPageState extends State<RegisterPage> {
     userModel.password = passwordController.text;
     userModel.fullName = fullNameController.text;
     userModel.phoneNumber = phoneController.text;
+
+    
 
     await firebaseFirestore
         .collection("users")

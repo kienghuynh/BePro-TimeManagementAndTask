@@ -1,3 +1,4 @@
+import 'package:bepro/models/category_model.dart';
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/pages/detailTask_page.dart';
@@ -36,9 +37,13 @@ class _EditTaskPageState extends State<EditTaskPage> {
   DateTime? deadline;
   bool? isImportant;
   bool? isDone;
+  String? selectedValue;
+
+  List<String> items = [];
 
   @override
   void initState() {
+    getCategories();
     // TODO: implement initState
     titleController.text = widget.detailModel.title!;
     noteController.text = widget.detailModel.note!;
@@ -47,6 +52,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     deadline = widget.detailModel.deadline;
     isImportant = widget.detailModel.isImportant;
     isDone = widget.detailModel.isDone;
+    selectedValue = widget.detailModel.category;
     super.initState();
   }
 
@@ -150,6 +156,18 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   noteController,
                   Icon(Icons.edit_note),
                   Color.fromARGB(255, 70, 70, 70)),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Utility().BottomLine(),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 70,
+              width: 350,
+              child: dropDownCategories(),
             ),
             SizedBox(
               height: 10,
@@ -324,6 +342,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     print('start: ${startDate}}');
     print('deadline: ${deadline}}');
     print('is important: ${isImportant}');
+    print('cate ${selectedValue}');
   }
 
   updateTaskToFireStore() async {
@@ -342,8 +361,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
     task.isImportant = isImportant;
     task.note = noteController.text;
     task.startDate = startDate;
+    task.category = selectedValue as String;
 
-    if (startDate != null && deadline != null) {
+    if (startDate != null && deadline != null && startDate!.compareTo(deadline!) <0) {
       await firebaseFirestore
           .collection("users")
           .doc(user!.uid)
@@ -352,6 +372,77 @@ class _EditTaskPageState extends State<EditTaskPage> {
           .set(task.toMap());
       Fluttertoast.showToast(msg: "Đã cập nhập công việc");
     } else
-      (Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu và kết thúc'));
+      (Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu sau kết thúc'));
+  }
+
+  List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
+    List<DropdownMenuItem<String>> _menuItems = [];
+    for (var item in items) {
+      _menuItems.addAll(
+        [
+          DropdownMenuItem<String>(
+            value: item,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                item,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          //If it's last item, we will not add Divider after it.
+          if (item != items.last)
+            const DropdownMenuItem<String>(
+              enabled: false,
+              child: Divider(),
+            ),
+        ],
+      );
+    }
+    return _menuItems;
+  }
+
+  Widget dropDownCategories() {
+    return Container(
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: Colors.blueGrey, width: 1, style: BorderStyle.solid),
+            borderRadius: BorderRadius.circular(5)),
+        padding: EdgeInsets.all(5),
+        child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+                hint: Text(
+                  'Loại công việc',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                items: _addDividersAfterItems(items),
+                value: selectedValue,
+                onChanged: (value) {
+                  setState(() {
+                    selectedValue = value as String;
+                  });
+                })));
+  }
+
+  Future<void> getCategories() async {
+    var snapshotCate = await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("categories")
+        .get();
+
+    List<CategoryModel> list = snapshotCate.docs
+        .map((e) => CategoryModel().fromJson(e.data()))
+        .toList();
+
+    setState(() {
+      for (var item in list) {
+        items.add(item.categoryName!);
+      }
+    });
   }
 }

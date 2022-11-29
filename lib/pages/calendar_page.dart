@@ -31,6 +31,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   void initState() {
+    
     _initializeEventColor();
     getDataFromeFirestore().then((result) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
@@ -147,7 +148,7 @@ class _CalendarPageState extends State<CalendarPage> {
             startTime: element.startDate as DateTime,
             endTime: element.deadline as DateTime,
             color:
-                _colorCollection[element.colorCode as int],
+                Color.fromARGB(255, 127, 173, 253),
             subject: element.title.toString()));
       },
     );

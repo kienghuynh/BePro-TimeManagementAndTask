@@ -1,17 +1,20 @@
 import 'dart:math';
 
+import 'package:bepro/models/category_model.dart';
 import 'package:bepro/models/task_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/pages/calendar_page.dart';
+import 'package:bepro/pages/category_page.dart';
 import 'package:bepro/pages/currentWeekTask_page.dart';
 import 'package:bepro/pages/doneTask_page.dart';
 import 'package:bepro/pages/importantTask_page.dart';
 import 'package:bepro/pages/login_page.dart';
-import 'package:bepro/pages/allTask_page.dart';
+import 'package:bepro/pages/monthTask_page.dart';
 import 'package:bepro/pages/todayTask_page.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:bepro/widget/home_page/clock_text.dart';
 import 'package:bepro/widget/home_page/clock_text_week.dart';
+import 'package:bepro/widget/home_page/dropDown_Categories.dart';
 import 'package:bepro/widget/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,17 +56,16 @@ class _TaskPageState extends State<TaskPage> {
 
   DateTime? startDate;
   DateTime? deadline;
-  bool pressedStartDate = false;
-  bool pressedDeadline = false;
+
+  List<String> items = [];
+
+  String? selectedValue;
 
   @override
   void initState() {
     super.initState();
     countall();
-    countToday();
-    countImportant();
-    countDone();
-    countWeek();
+    getCategories();
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -72,6 +74,7 @@ class _TaskPageState extends State<TaskPage> {
       loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
+    setState(() {});
   }
 
   @override
@@ -89,297 +92,185 @@ class _TaskPageState extends State<TaskPage> {
               style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
             ),
           ),
-          actions: [
-            Builder(
-              builder: (context) => IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () => Scaffold.of(context).openEndDrawer(),
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              ),
-            ),
-          ],
+          // actions: [
+          //   Builder(
+          //     builder: (context) => IconButton(
+          //       icon: Icon(Icons.settings),
+          //       onPressed: () => Scaffold.of(context).openEndDrawer(),
+          //       tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          //     ),
+          //   ),
+          // ],
         ),
         body: _pageWidget(),
         extendBody: true,
         floatingActionButton: _btnAddFloating(),
-        endDrawer: _drawerMenu(),
       ),
     );
   }
 
   Widget _pageWidget() {
     return SingleChildScrollView(
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 30, top: 30, right: 30),
-          child: Form(
-              key: _formKey,
-              child: Column(children: [
-                //_introText(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(18)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _allTaskButton(),
-                            flex: 4,
-                          ),
-                          //Expanded(child: SizedBox(),),
-                          Expanded(
-                            child: _textCount(
-                                countAllTask, Color.fromARGB(255, 0, 0, 0)),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _bordertop(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _todayButton(),
-                            flex: 4,
-                          ),
-                          //Expanded(child: SizedBox(),),
-                          Expanded(
-                            child: _textCount(
-                                countTodayTask, Color.fromARGB(255, 0, 0, 0)),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [ClockText()],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _bordertop(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: _weekButton(), flex: 4),
-                          Expanded(
-                            flex: 1,
-                            child: _textCount(
-                                countWeekTask, Color.fromARGB(255, 0, 0, 0)),
-                          )
-                        ],
-                      ),
-                      // Row(
-                      //   children: [ClockTextWeek()],
-                      // ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _bordertop(),
-                      // SizedBox(
-                      //   height: 20,
-                      // ),
-                      // Row(
-                      //   children: [
-                      //     Expanded(child: _upcomingButton(), flex: 4),
-                      //     Expanded(
-                      //       child:
-                      //           _textCount("0", Color.fromARGB(255, 0, 0, 0)),
-                      //     )
-                      //   ],
-                      // ),
-                      // SizedBox(
-                      //   height: 20,
-                      // ),
-                      // _bordertop(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: _importantButton(), flex: 4),
-                          Expanded(
-                            child: _textCount(countImportantTask,
-                                Color.fromARGB(255, 0, 0, 0)),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _bordertop(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: _completedButton(), flex: 4),
-                          Expanded(
-                            child: _textCount(
-                                countDoneTask, Color.fromARGB(255, 0, 0, 0)),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
+      child: Container(
+        color: Colors.white,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(left: 5, top: 5, right: 5),
+            child: Form(
+                key: _formKey,
+                child: Column(children: [
+                  //_introText(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _allTaskButton(),
+                              flex: 4,
+                            ),
+                            //Expanded(child: SizedBox(),),
+                            Expanded(
+                              child: _textCount(
+                                  countAllTask, Color.fromARGB(255, 0, 0, 0)),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _bordertop(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _todayButton(),
+                              flex: 4,
+                            ),
+                            //Expanded(child: SizedBox(),),
+                            Expanded(
+                              child: _textCount(
+                                  countTodayTask, Color.fromARGB(255, 0, 0, 0)),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [ClockText()],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _bordertop(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: _weekButton(), flex: 4),
+                            Expanded(
+                              flex: 1,
+                              child: _textCount(
+                                  countWeekTask, Color.fromARGB(255, 0, 0, 0)),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [ClockTextWeek()],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _bordertop(),
+                        // SizedBox(
+                        //   height: 20,
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(child: _upcomingButton(), flex: 4),
+                        //     Expanded(
+                        //       child:
+                        //           _textCount("0", Color.fromARGB(255, 0, 0, 0)),
+                        //     )
+                        //   ],
+                        // ),
+                        // SizedBox(
+                        //   height: 20,
+                        // ),
+                        // _bordertop(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: _importantButton(), flex: 4),
+                            Expanded(
+                              child: _textCount(countImportantTask,
+                                  Color.fromARGB(255, 0, 0, 0)),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _bordertop(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: _completedButton(), flex: 4),
+                            Expanded(
+                              child: _textCount(
+                                  countDoneTask, Color.fromARGB(255, 0, 0, 0)),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                // _bordertop(),
-                // SizedBox(
-                //   height: 15,
-                //),
-                // Container(
-                //   decoration: BoxDecoration(
-                //       color: Colors.white,
-                //       borderRadius: BorderRadius.circular(18)),
-                //   child: Column(
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     children: [
-                //       SizedBox(
-                //         height: 15,
-                //       ),
-                //       _NotedButton(),
-                //       SizedBox(
-                //         height: 15,
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 15,
-                // )
-              ])),
-        ),
-      ),
-    );
-  }
-
-  Widget _drawerMenu() {
-    return Drawer(
-      backgroundColor: Colors.grey.shade300,
-      child: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [_headerDrawer(), _drawerList()],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  _bordertop(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _categoryButton(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  )
+                ])),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _headerDrawer() {
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        colors: [
-          Color.fromARGB(255, 221, 181, 73),
-          Color.fromARGB(255, 99, 216, 204)
-        ],
-      )),
-      width: double.infinity,
-      height: 200,
-      padding: EdgeInsets.only(top: 5.0),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 70,
-          ),
-          _image('assets/person.png', 50),
-          _profileText("${loggedInUser.fullName}"),
-          _profileText("${loggedInUser.email}"),
-        ],
-      ),
-    );
-  }
-
-  Widget _drawerList() {
-    return Container(
-        padding: EdgeInsets.only(
-          top: 15,
-        ),
-        child: Column(
-            // shows the list of menu drawer
-            children: [
-              _createTextButtonDrawer('Cập nhật thông tin cá nhân',
-                  Icon(Icons.recent_actors_outlined)),
-              _createTextButtonDrawer(
-                  'Đổi mật khẩu', Icon(Icons.settings_outlined)),
-              _createTextButtonDrawer('Cài đặt', Icon(Icons.settings_outlined)),
-              _createTextButtonDrawer(
-                  'Chính sách', Icon(Icons.policy_outlined)),
-              _createTextButtonDrawer(
-                  'Gửi đánh giá', Icon(Icons.feedback_outlined)),
-              Container(
-                padding: EdgeInsets.all(25),
-                child: _logoutButton(),
-              ),
-            ]));
-  }
-
-  Widget _createTextButtonDrawer(String text, Icon icon) {
-    return TextButton.icon(
-        icon: icon,
-        label: Text('$text',
-            textAlign: TextAlign.center,
-            style:
-                TextStyle(fontSize: 20, color: Color.fromARGB(255, 0, 0, 0))),
-        onPressed: () {});
-  }
-
-  Widget _profileText(String string) {
-    return Text(
-      '$string',
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 18, color: Colors.white),
-    );
-  }
-
-  Widget _image(String url, double height) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          alignment: Alignment(0, -0.8),
-          image: AssetImage('$url'),
-        ),
-      ),
-      height: height,
-    );
-  }
-
-  Widget _logoutButton() {
-    return ElevatedButton(
-      onPressed: () {
-        logOut();
-      },
-      child: const SizedBox(
-        width: double.infinity,
-        child: Text(
-          'Đăng xuất',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
-      style: ElevatedButton.styleFrom(
-          shape: const StadiumBorder(side: BorderSide(color: Colors.black)),
-          primary: Colors.white,
-          onPrimary: Color.fromARGB(255, 78, 169, 160),
-          padding: EdgeInsets.symmetric(vertical: 16)),
     );
   }
 
@@ -419,7 +310,7 @@ class _TaskPageState extends State<TaskPage> {
         style: OutlinedButton.styleFrom(
             side: BorderSide(color: Colors.transparent)),
         onPressed: () {
-          NavigationService().navigateToScreen(AllTaskPage());
+          NavigationService().navigateToScreen(MonthTaskPage());
         },
         child: Stack(
           children: [
@@ -433,7 +324,7 @@ class _TaskPageState extends State<TaskPage> {
             Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "        Tất cả",
+                  "        Danh sách toàn bộ",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     height: 1.5,
@@ -567,11 +458,13 @@ class _TaskPageState extends State<TaskPage> {
         ));
   }
 
-  Widget _NotedButton() {
+  Widget _categoryButton() {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             side: BorderSide(color: Colors.transparent)),
-        onPressed: () {},
+        onPressed: () {
+          NavigationService().navigateToScreen(CategoryPage());
+        },
         child: Stack(
           children: [
             Align(
@@ -584,7 +477,7 @@ class _TaskPageState extends State<TaskPage> {
             Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "        Ghi chú",
+                  "        Loại công việc",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     height: 1.5,
@@ -620,6 +513,11 @@ class _TaskPageState extends State<TaskPage> {
       child: FittedBox(
         child: FloatingActionButton(
             onPressed: () {
+              setState(() {});
+              setState(() {
+                startDate = DateTime.now();
+                deadline = DateTime.now().add(Duration(minutes: 60));
+              });
               showDialogCreateTask();
             },
             backgroundColor: Color.fromARGB(255, 95, 255, 100),
@@ -686,14 +584,17 @@ class _TaskPageState extends State<TaskPage> {
                   height: 10,
                 ),
                 Container(
+                  height: 70,
+                  width: 600,
+                  child: dropDownCategories(),
+                ),
+                Container(
                   height: 50,
                   width: 600,
                   alignment: Alignment.centerLeft,
                   child: Row(children: [
                     TimePickerStartDate(),
-                    pressedStartDate
-                        ? Utility().DisplayDateTime(startDate!)
-                        : Text('')
+                    Utility().DisplayDateTime(startDate!)
                   ]),
                 ),
                 Container(
@@ -702,9 +603,7 @@ class _TaskPageState extends State<TaskPage> {
                   alignment: Alignment.centerLeft,
                   child: Row(children: [
                     TimePickerDeadline(),
-                    pressedDeadline
-                        ? Utility().DisplayDateTime(deadline!)
-                        : Text('')
+                    Utility().DisplayDateTime(deadline!)
                   ]),
                 ),
                 Container(
@@ -731,6 +630,9 @@ class _TaskPageState extends State<TaskPage> {
                 size: 30,
               ),
               onPressed: () {
+                setState(() {
+                  cancel();
+                });
                 NavigationService().goBack();
               },
               label: Text(
@@ -750,10 +652,10 @@ class _TaskPageState extends State<TaskPage> {
               ),
               onPressed: () {
                 postTaskToFireStore();
+                //printt();
                 setState(() {
                   countall();
                 });
-                NavigationService().goBack();
               },
               label: Text(
                 '',
@@ -773,7 +675,7 @@ class _TaskPageState extends State<TaskPage> {
         message: "Đánh dấu việc quan trọng",
         child: LikeButton(
             size: 40,
-            //isLiked: true,
+            isLiked: isImportant,
             likeBuilder: (isLiked) {
               return Icon(
                 Icons.star,
@@ -786,11 +688,17 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
+  Future<bool> onButtonTapped(bool isLiked) async {
+    setState(() {
+      isImportant = !isLiked;
+    });
+    return !isLiked;
+  }
+
   Widget TimePickerStartDate() {
     return TextButton.icon(
       onPressed: () {
         setState(() {
-          pressedStartDate = true;
           DatePicker.showDateTimePicker(context,
               showTitleActions: true,
               minTime: DateTime(2000, 1, 1),
@@ -816,7 +724,6 @@ class _TaskPageState extends State<TaskPage> {
     return TextButton.icon(
       onPressed: () {
         setState(() {
-          pressedDeadline = true;
           DatePicker.showDateTimePicker(context,
               showTitleActions: true,
               minTime: startDate,
@@ -854,36 +761,148 @@ class _TaskPageState extends State<TaskPage> {
     task.isImportant = isImportant;
     task.note = noteController.text;
     task.startDate = startDate;
+    task.category = selectedValue;
 
-    if (startDate != null && deadline != null) {
+    if (startDate != null &&
+        deadline != null &&
+        startDate!.compareTo(deadline!) < 0 &&
+        selectedValue!.trim()!="") {
       await firebaseFirestore
           .collection("users")
           .doc(user!.uid)
           .collection("tasks")
           .doc(task.uid)
           .set(task.toMap());
-      print(countAllTask);
       Fluttertoast.showToast(msg: "Đã thêm 1 công việc");
-    } else
-      (Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu và kết thúc'));
+      NavigationService().goBack();
+    } else {
+      Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu và kết thúc');
+    }
+  }
+
+  // void printt() {
+  //   var uuid = Uuid().v4();
+  //   Random random = Random();
+  //   TaskModel task = TaskModel();
+
+  //   task.uid = uuid;
+  //   task.title = titleController.text;
+  //   task.detail = detailController.text;
+  //   task.colorCode = random.nextInt(9).toString();
+  //   task.createAt = DateTime.now();
+  //   task.deadline = deadline;
+  //   task.doneDate = DateTime(0001, 01, 01, 01, 01, 01);
+  //   task.isDone = false;
+  //   task.isImportant = isImportant;
+  //   task.note = noteController.text;
+  //   task.startDate = startDate;
+  //   task.category = selectedValue;
+
+  //   print('uid: ${task.uid}');
+  //   print('title: ${task.title}');
+  //   print('detail: ${task.detail}');
+  //   print('màu: ${task.colorCode}');
+  //   print('create: ${task.createAt}');
+  //   print('dead: ${task.deadline}');
+  //   print('done: ${task.doneDate}');
+  //   print('isdone: ${task.isDone}');
+  //   print('sao: ${task.isImportant}');
+  //   print('note: ${task.note}');
+  //   print('start: ${task.startDate}');
+  //   print('cate: ${task.category}');
+  // }
+
+  List<int> _getDividersIndexes() {
+    List<int> _dividersIndexes = [];
+    for (var i = 0; i < (items.length * 2) - 1; i++) {
+      //Dividers indexes will be the odd indexes
+      if (i.isOdd) {
+        _dividersIndexes.add(i);
+      }
+    }
+    return _dividersIndexes;
+  }
+
+  List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
+    List<DropdownMenuItem<String>> _menuItems = [];
+    for (var item in items) {
+      _menuItems.addAll(
+        [
+          DropdownMenuItem<String>(
+            value: item,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                item,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          //If it's last item, we will not add Divider after it.
+          if (item != items.last)
+            const DropdownMenuItem<String>(
+              enabled: false,
+              child: Divider(),
+            ),
+        ],
+      );
+    }
+    return _menuItems;
+  }
+
+  Widget dropDownCategories() {
+    return Container(
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: Colors.blueGrey, width: 1, style: BorderStyle.solid),
+            borderRadius: BorderRadius.circular(5)),
+        padding: EdgeInsets.all(5),
+        child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+                hint: Text(
+                  'Loại công việc',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                items: _addDividersAfterItems(items),
+                value: selectedValue,
+                onChanged: (value) {
+                  setState(() {
+                    selectedValue = value as String;
+                    NavigationService().goBack();
+                    showDialogCreateTask();
+                  });
+                })));
+  }
+
+  Future<void> getCategories() async {
+    var snapshotCate = await firebaseFirestore
+        .collection("users")
+        .doc(user!.uid)
+        .collection("categories")
+        .get();
+
+    List<CategoryModel> list = snapshotCate.docs
+        .map((e) => CategoryModel().fromJson(e.data()))
+        .toList();
+
+    setState(() {
+      for (var item in list) {
+        items.add(item.categoryName!);
+      }
+    });
   }
 
   void cancel() {
     titleController.text = '';
     detailController.text = '';
     noteController.text = '';
-  }
-
-  Future<bool> onButtonTapped(bool isLiked) async {
-    setState(() {
-      isImportant = !isLiked;
-    });
-    return !isLiked;
-  }
-
-  Future<void> logOut() async {
-    await FirebaseAuth.instance.signOut();
-    NavigationService().replaceScreen(LoginPage());
+    isImportant = false;
+    startDate = DateTime.now();
+    deadline = DateTime.now().add(Duration(minutes: 60));
   }
 
   Future<void> countall() async {
@@ -896,98 +915,61 @@ class _TaskPageState extends State<TaskPage> {
     List<TaskModel> list =
         snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
 
+    List<TaskModel> listToday = [];
+
+    List<TaskModel> listWeek = [];
+
+    String startDate, deadline;
+
+    // for today
+    list.forEach(
+      (element) {
+        if (Utility().compareToday(
+            element.startDate.toString(), element.deadline.toString())) {
+          listToday.add(element);
+        }
+      },
+    );
+
+    //for current week
+    DateTime now = DateTime.now();
+    int currentDay = now.weekday;
+    DateTime firstDayOfWeek = now.subtract(Duration(days: currentDay - 1));
+    DateTime endDayOfWeek = firstDayOfWeek.add(Duration(days: 6));
+
+    list.forEach(
+      (element) {
+        if (Utility().compareRangeTimeDate(element.startDate!,
+            element.deadline!, firstDayOfWeek, endDayOfWeek)) {
+          listWeek.add(element);
+        }
+      },
+    );
+
+    //for important task
+
+    List<TaskModel> listImportant = [];
+    for (var item in list) {
+      if (item.isImportant!) {
+        listImportant.add(item);
+      }
+    }
+
+    //for done task
+
+    List<TaskModel> listDone = [];
+    for (var item in list) {
+      if (item.isDone!) {
+        listDone.add(item);
+      }
+    }
+
     setState(() {
       countAllTask = list.length.toString();
-    });
-  }
-
-  Future<void> countToday() async {
-    var snapshotValue = await firebaseFirestore
-        .collection("users")
-        .doc(user!.uid)
-        .collection("tasks")
-        .get();
-
-    List<TaskModel> list =
-        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
-
-    List<TaskModel> listAccept = [];
-
-    list.forEach(
-      (element) {
-        if (element.startDate!.day == DateTime.now().day ||
-            element.deadline!.day == DateTime.now().day) {
-          listAccept.add(element);
-        }
-        if (element.startDate!.compareTo(DateTime.now()) < 0 &&
-            element.deadline!.compareTo(DateTime.now()) > 0) {
-          listAccept.add(element);
-        }
-      },
-    );
-
-    setState(() {
-      countTodayTask = listAccept.length.toString();
-    });
-  }
-
-  Future<void> countWeek() async {
-    var snapshotValue = await firebaseFirestore
-        .collection("users")
-        .doc(user!.uid)
-        .collection("tasks")
-        .get();
-
-    List<TaskModel> list =
-        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
-
-    List<TaskModel> listAccept = [];
-
-    list.forEach(
-      (element) {
-        if (element.startDate!
-                    .compareTo(DateTime.now().add(Duration(days: -2))) >
-                0 &&
-            element.deadline!.compareTo(DateTime.now().add(Duration(days: 5))) <
-                0) {
-          listAccept.add(element);
-        }
-      },
-    );
-
-    setState(() {
-      countWeekTask = listAccept.length.toString();
-    });
-  }
-
-  Future<void> countImportant() async {
-    var snapshotValue = await firebaseFirestore
-        .collection("users")
-        .doc(user!.uid)
-        .collection("tasks")
-        .where("isImportant", isEqualTo: true)
-        .get();
-
-    List<TaskModel> list =
-        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
-
-    setState(() {
-      countImportantTask = list.length.toString();
-    });
-  }
-
-  Future<void> countDone() async {
-    var snapshotValue = await firebaseFirestore
-        .collection("users")
-        .doc(user!.uid)
-        .collection("tasks")
-        .where("isDone", isEqualTo: true)
-        .get();
-
-    List<TaskModel> list =
-        snapshotValue.docs.map((e) => TaskModel().fromJson(e.data())).toList();
-    setState(() {
-      countDoneTask = list.length.toString();
+      countTodayTask = listToday.length.toString();
+      countWeekTask = listWeek.length.toString();
+      countImportantTask = listImportant.length.toString();
+      countDoneTask = listDone.length.toString();
     });
   }
 }

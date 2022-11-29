@@ -74,7 +74,7 @@ class _DonePageState extends State<DonePage> {
         .snapshots(includeMetadataChanges: true);
     return Container(
       height: 630,
-      margin: EdgeInsets.all(15),
+      margin: EdgeInsets.only(bottom:10, left: 15, right: 15),
       child: StreamBuilder<QuerySnapshot>(
         stream: _taskStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
