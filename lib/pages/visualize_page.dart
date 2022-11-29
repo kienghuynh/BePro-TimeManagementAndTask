@@ -1,3 +1,4 @@
+import 'package:bepro/Utility/CustomPickerMonth.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:bepro/Utility/utilities.dart';
 import 'package:bepro/widget/visualize_page/groupsBarChart.dart';
@@ -34,8 +35,21 @@ class _VisualizePageState extends State<VisualizePage> {
             style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
           ),
         ),
+        actions: [
+          TextButton.icon(
+              onPressed: () {
+                showPickerMonth();
+              },
+              icon: Icon(
+                Icons.search_outlined,
+                size: 34,
+                color: Color.fromARGB(255, 99, 216, 204),
+              ),
+              label: Text(''))
+        ],
       ),
       body: _pageWidget(),
+      
     ));
   }
 
@@ -267,5 +281,19 @@ class _VisualizePageState extends State<VisualizePage> {
       ),
       icon: Icon(Icons.access_time),
     );
+  }
+
+  void showPickerMonth() {
+    DatePicker.showPicker(context,
+        pickerModel: CustomMonthPicker(
+            minTime: DateTime(2000),
+            maxTime: DateTime(2099),
+            currentTime: DateTime.now()),
+        onChanged: (month) {}, onConfirm: (month) {
+      setState(() {
+        startDate = DateTime(month.year, month.month, 1);
+        deadline = DateTime(month.year, month.month + 1, 0);
+      });
+    }, locale: LocaleType.vi);
   }
 }
