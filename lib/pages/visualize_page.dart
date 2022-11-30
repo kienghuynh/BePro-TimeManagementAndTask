@@ -55,7 +55,7 @@ class _VisualizePageState extends State<VisualizePage> {
                 showPickerMonth();
               },
               icon: Icon(
-                Icons.search_outlined,
+                Icons.calendar_month,
                 size: 34,
                 color: Color.fromARGB(255, 99, 216, 204),
               ),

@@ -72,26 +72,34 @@ class _PieDoneChartState extends State<PieDoneChart> {
               ],
             ),
           ),
-          (notDone==0 && done ==0)
-          ? Container(
-            height: 240,
-              margin: EdgeInsets.all(25),
-              child: Center(
-                        child: Text('Tháng này không có cộng việc phù hợp', 
-                          style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Color.fromARGB(172, 255, 82, 82)),),),)
-          : Container(
-              width: 350,
-              child: SfCircularChart(series: <CircularSeries>[
-                // Render pie chart
-                PieSeries<ChartData, String>(
-                    explode: true,
-                    dataSource: chartData,
-                    pointColorMapper: (ChartData data, _) => data.color,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    dataLabelMapper: (ChartData data, _) => data.text,
-                    dataLabelSettings: const DataLabelSettings(isVisible: true))
-              ])),
+          (notDone == 0 && done == 0)
+              ? Container(
+                  height: 240,
+                  margin: EdgeInsets.all(25),
+                  child: Center(
+                    child: Text(
+                      'Tháng này không có cộng việc phù hợp',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic,
+                          color: Color.fromARGB(172, 255, 82, 82)),
+                    ),
+                  ),
+                )
+              : Container(
+                  width: 350,
+                  child: SfCircularChart(series: <CircularSeries>[
+                    // Render pie chart
+                    PieSeries<ChartData, String>(
+                        explode: true,
+                        dataSource: chartData,
+                        pointColorMapper: (ChartData data, _) => data.color,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y,
+                        dataLabelMapper: (ChartData data, _) => data.text,
+                        dataLabelSettings:
+                            const DataLabelSettings(isVisible: true))
+                  ])),
           Container(
             margin: EdgeInsets.only(
               left: 15,
@@ -132,9 +140,7 @@ class _PieDoneChartState extends State<PieDoneChart> {
 
     setState(() {
       for (var item in listAccept) {
-        if (item.startDate!.compareTo(DateTime.now()) > 0) {
-          notStart++;
-        } else if (item.isDone!) {
+        if (item.isDone!) {
           done++;
         } else {
           notDone++;

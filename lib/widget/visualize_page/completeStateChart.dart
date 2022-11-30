@@ -62,7 +62,7 @@ class _CompleteStateChartState extends State<CompleteStateChart> {
             child: Row(
               children: [
                 Icon(Icons.bookmark_outlined,
-                    color: Color.fromARGB(211, 233, 106, 89)),
+                    color: Color.fromARGB(214, 54, 52, 102)),
                 Text(
                   "Hoàn thành trễ: ${_late.toStringAsFixed(0)} công việc",
                   style: TextStyle(fontSize: 16),
@@ -151,9 +151,9 @@ class _CompleteStateChartState extends State<CompleteStateChart> {
     setState(() {
       chartData = [
         ChartData('Hoàn thành sớm', _early, Color.fromARGB(217, 85, 255, 252),
-            'Hoàn thành: ${((_early * 100) / (_early + _late)).toStringAsFixed(0)}%'),
-        ChartData('hoành thành Trễ', _late, Color.fromARGB(211, 233, 106, 89),
-            'Chưa hoàn thành: ${((_late * 100) / (_early + _late)).toStringAsFixed(0)}% '),
+            'Hoàn thành sớm: ${((_early * 100) / (_early + _late)).toStringAsFixed(0)}%'),
+        ChartData('hoành thành trễ', _late, Color.fromARGB(214, 54, 52, 102),
+            'Hoàn thành trễ: ${((_late * 100) / (_early + _late)).toStringAsFixed(0)}% '),
       ];
     });
   }

@@ -2,6 +2,7 @@ import 'package:bepro/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -102,14 +103,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                           const SizedBox(height: 10),
                           AppGrayTextField(
+                            keyboardType: TextInputType.phone,
                             controller: phoneController,
                             hint: 'Di động',
                             textInputAction: TextInputAction.done,
                             validator: (value) {
-                              if (value?.isEmpty ?? false) {
-                                return "Vui lòng nhập số điện thoại";
+                              if (value!.isEmpty)
+                                return ('Vui lòng nhập số điện thoại.');
+                              if (!RegExp(r'^0[1-9]{9}$').hasMatch(value)) {
+                                return ('Dài 10 ký tự số và bắt đầu bằng 0');
                               }
-
                               return null;
                             },
                           ),
@@ -150,7 +153,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           AppGrayTextField(
                             readOnly: true,
                             controller: emailController,
-                            hint: 'Di động',
+                            hint: '',
                             textInputAction: TextInputAction.done,
                           ),
                           const SizedBox(
@@ -175,15 +178,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget _editProfile() {
     return ElevatedButton(
       onPressed: () {
-        if (!_formKey.currentState!.validate()) return null;
-        FirebaseFirestore.instance.collection("users").doc(user!.uid).update({
-          'fullName': fullNameController.text.trim(),
-          'phoneNumber': phoneController.text.trim(),
-          'password': passwordController.text.trim(),
-          'email': emailController.text.trim()
-        }).then((value) {
-          Navigator.of(context).pop();
-        }).catchError((error) => print("Failed to update user: $error"));
+        if (_formKey.currentState!.validate()) {
+          FirebaseFirestore.instance.collection("users").doc(user!.uid).update({
+            'fullName': fullNameController.text.trim(),
+            'phoneNumber': phoneController.text.trim(),
+            'password': passwordController.text.trim(),
+            'email': emailController.text.trim()
+          }).then((value) {
+            changPassword();
+            Navigator.of(context).pop();
+          }).catchError((error) => print("Có lỗi xảy ra $error"));
+        }
       },
       style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(side: BorderSide(color: Colors.black)),
@@ -199,6 +204,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
       ),
     );
+  }
+
+  changPassword() async {
+    try {
+      await user?.updatePassword(passwordController.text);
+    } catch (error) {
+      Fluttertoast.showToast(toastLength: Toast.LENGTH_LONG ,msg: error.toString());
+    }
   }
 }
 

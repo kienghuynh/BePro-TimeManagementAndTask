@@ -148,7 +148,7 @@ class _CalendarPageState extends State<CalendarPage> {
             startTime: element.startDate as DateTime,
             endTime: element.deadline as DateTime,
             color:
-                Color.fromARGB(255, 127, 173, 253),
+                Color.fromARGB(255, 99, 216, 204),
             subject: element.title.toString()));
       },
     );

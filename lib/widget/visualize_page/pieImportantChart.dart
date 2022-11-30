@@ -49,7 +49,7 @@ class _PieImportantChartState extends State<PieImportantChart> {
             child: Row(
               children: [
                 Icon(Icons.bookmark_outlined,
-                    color: Color.fromARGB(255, 251, 255, 36)),
+                    color: Color.fromARGB(237, 255, 247, 86)),
                 Text(
                   "Quan trọng: ${im.toStringAsFixed(0)} công việc",
                   style: TextStyle(fontSize: 16),
@@ -62,7 +62,7 @@ class _PieImportantChartState extends State<PieImportantChart> {
             child: Row(
               children: [
                 Icon(Icons.bookmark_outlined,
-                    color: Color.fromARGB(255, 157, 157, 157)),
+                    color: Color.fromARGB(181, 157, 157, 157)),
                 Text(
                   "Không quan trọng: ${notIm.toStringAsFixed(0)} công việc",
                   style: TextStyle(fontSize: 16),
@@ -140,9 +140,9 @@ class _PieImportantChartState extends State<PieImportantChart> {
 
     setState(() {
       chartData = [
-        ChartData('Quan trọng', im, Color.fromARGB(255, 251, 255, 36),
+        ChartData('Quan trọng', im, Color.fromARGB(237, 255, 247, 86),
             'Quan trọng: ${((im * 100) / (im + notIm)).toStringAsFixed(0)}%'),
-        ChartData('Không quan trọng', notIm, Color.fromARGB(255, 157, 157, 157),
+        ChartData('Không quan trọng', notIm, Color.fromARGB(181, 157, 157, 157),
             'Không quan trọng: ${((notIm * 100) / (im + notIm)).toStringAsFixed(0)}% '),
       ];
     });
