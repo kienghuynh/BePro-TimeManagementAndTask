@@ -9,27 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class PieDoneChart extends StatefulWidget {
+class CompleteStateChart extends StatefulWidget {
   DateTime startDate;
   DateTime deadline;
 
-  PieDoneChart({super.key, required this.startDate, required this.deadline});
+  CompleteStateChart(
+      {super.key, required this.startDate, required this.deadline});
 
   @override
-  State<PieDoneChart> createState() => _PieDoneChartState();
+  State<CompleteStateChart> createState() => _CompleteStateChartState();
 }
 
-class _PieDoneChartState extends State<PieDoneChart> {
+class _CompleteStateChartState extends State<CompleteStateChart> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   final _formKey = GlobalKey<FormState>();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  double done = 0;
-  double notDone = 0;
-  double notStart = 0;
-
-  ConnectionState? state;
+  double _early = 0;
+  double _late = 0;
 
   List<ChartData> chartData = [];
 
@@ -51,9 +49,9 @@ class _PieDoneChartState extends State<PieDoneChart> {
             child: Row(
               children: [
                 Icon(Icons.bookmark_outlined,
-                    color: Color.fromARGB(255, 120, 231, 80)),
+                    color: Color.fromARGB(217, 85, 255, 252)),
                 Text(
-                  "Đã hoàn thành: ${done.toStringAsFixed(0)} công việc",
+                  "Hoàn thành sớm: ${_early.toStringAsFixed(0)} công việc",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
@@ -64,34 +62,42 @@ class _PieDoneChartState extends State<PieDoneChart> {
             child: Row(
               children: [
                 Icon(Icons.bookmark_outlined,
-                    color: Color.fromARGB(255, 83, 118, 91)),
+                    color: Color.fromARGB(211, 233, 106, 89)),
                 Text(
-                  "Chưa hoàn thành: ${notDone.toStringAsFixed(0)} công việc",
+                  "Hoàn thành trễ: ${_late.toStringAsFixed(0)} công việc",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
             ),
           ),
-          (notDone==0 && done ==0)
-          ? Container(
-            height: 240,
-              margin: EdgeInsets.all(25),
-              child: Center(
-                        child: Text('Tháng này không có cộng việc phù hợp', 
-                          style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Color.fromARGB(172, 255, 82, 82)),),),)
-          : Container(
-              width: 350,
-              child: SfCircularChart(series: <CircularSeries>[
-                // Render pie chart
-                PieSeries<ChartData, String>(
-                    explode: true,
-                    dataSource: chartData,
-                    pointColorMapper: (ChartData data, _) => data.color,
-                    xValueMapper: (ChartData data, _) => data.x,
-                    yValueMapper: (ChartData data, _) => data.y,
-                    dataLabelMapper: (ChartData data, _) => data.text,
-                    dataLabelSettings: const DataLabelSettings(isVisible: true))
-              ])),
+          (_early == 0 && _late == 0)
+              ? Container(
+                height: 240,
+                  margin: EdgeInsets.all(25),
+                  child: Center(
+                    child: Text(
+                      'Tháng này chưa có công việc hoàn thành',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic,
+                          color: Color.fromARGB(172, 255, 82, 82)),
+                    ),
+                  ),
+                )
+              : Container(
+                  width: 350,
+                  child: SfCircularChart(series: <CircularSeries>[
+                    // Render pie chart
+                    PieSeries<ChartData, String>(
+                        explode: true,
+                        dataSource: chartData,
+                        pointColorMapper: (ChartData data, _) => data.color,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y,
+                        dataLabelMapper: (ChartData data, _) => data.text,
+                        dataLabelSettings:
+                            const DataLabelSettings(isVisible: true))
+                  ])),
           Container(
             margin: EdgeInsets.only(
               left: 15,
@@ -99,7 +105,7 @@ class _PieDoneChartState extends State<PieDoneChart> {
             ),
             child: Center(
               child: Text(
-                'Biểu đồ thống kê công việc tháng ${widget.startDate.month} / ${widget.startDate.year}',
+                'Biểu đồ thống kê trạng thái hoàn thành công việc tháng ${widget.startDate.month} / ${widget.startDate.year}',
                 style: TextStyle(
                     fontSize: 16, color: Color.fromARGB(255, 70, 70, 70)),
               ),
@@ -132,22 +138,22 @@ class _PieDoneChartState extends State<PieDoneChart> {
 
     setState(() {
       for (var item in listAccept) {
-        if (item.startDate!.compareTo(DateTime.now()) > 0) {
-          notStart++;
-        } else if (item.isDone!) {
-          done++;
-        } else {
-          notDone++;
+        if (item.isDone!) {
+          if (item.doneDate!.compareTo(item.deadline!) > 0) {
+            _late++;
+          } else {
+            _early++;
+          }
         }
       }
     });
 
     setState(() {
       chartData = [
-        ChartData('Hoàn thành', done, Color.fromARGB(255, 120, 231, 80),
-            'Hoàn thành: ${((done * 100) / (done + notDone)).toStringAsFixed(0)}%'),
-        ChartData('Chưa hoành thành', notDone, Color.fromARGB(255, 83, 118, 91),
-            'Chưa hoàn thành: ${((notDone * 100) / (done + notDone)).toStringAsFixed(0)}% '),
+        ChartData('Hoàn thành sớm', _early, Color.fromARGB(217, 85, 255, 252),
+            'Hoàn thành: ${((_early * 100) / (_early + _late)).toStringAsFixed(0)}%'),
+        ChartData('hoành thành Trễ', _late, Color.fromARGB(211, 233, 106, 89),
+            'Chưa hoàn thành: ${((_late * 100) / (_early + _late)).toStringAsFixed(0)}% '),
       ];
     });
   }

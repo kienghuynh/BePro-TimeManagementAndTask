@@ -9,27 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class PieDoneChart extends StatefulWidget {
+class PieImportantChart extends StatefulWidget {
   DateTime startDate;
   DateTime deadline;
 
-  PieDoneChart({super.key, required this.startDate, required this.deadline});
+  PieImportantChart(
+      {super.key, required this.startDate, required this.deadline});
 
   @override
-  State<PieDoneChart> createState() => _PieDoneChartState();
+  State<PieImportantChart> createState() => _PieImportantChartState();
 }
 
-class _PieDoneChartState extends State<PieDoneChart> {
+class _PieImportantChartState extends State<PieImportantChart> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   final _formKey = GlobalKey<FormState>();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  double done = 0;
-  double notDone = 0;
-  double notStart = 0;
-
-  ConnectionState? state;
+  double im = 0;
+  double notIm = 0;
 
   List<ChartData> chartData = [];
 
@@ -51,9 +49,9 @@ class _PieDoneChartState extends State<PieDoneChart> {
             child: Row(
               children: [
                 Icon(Icons.bookmark_outlined,
-                    color: Color.fromARGB(255, 120, 231, 80)),
+                    color: Color.fromARGB(255, 251, 255, 36)),
                 Text(
-                  "Đã hoàn thành: ${done.toStringAsFixed(0)} công việc",
+                  "Quan trọng: ${im.toStringAsFixed(0)} công việc",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
@@ -64,20 +62,20 @@ class _PieDoneChartState extends State<PieDoneChart> {
             child: Row(
               children: [
                 Icon(Icons.bookmark_outlined,
-                    color: Color.fromARGB(255, 83, 118, 91)),
+                    color: Color.fromARGB(255, 157, 157, 157)),
                 Text(
-                  "Chưa hoàn thành: ${notDone.toStringAsFixed(0)} công việc",
+                  "Không quan trọng: ${notIm.toStringAsFixed(0)} công việc",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
             ),
           ),
-          (notDone==0 && done ==0)
+          (im==0 && notIm ==0)
           ? Container(
             height: 240,
               margin: EdgeInsets.all(25),
               child: Center(
-                        child: Text('Tháng này không có cộng việc phù hợp', 
+                        child: Text('Tháng này không có công việc', 
                           style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Color.fromARGB(172, 255, 82, 82)),),),)
           : Container(
               width: 350,
@@ -99,7 +97,7 @@ class _PieDoneChartState extends State<PieDoneChart> {
             ),
             child: Center(
               child: Text(
-                'Biểu đồ thống kê công việc tháng ${widget.startDate.month} / ${widget.startDate.year}',
+                'Biểu đồ thống kê công việc quan trọng tháng ${widget.startDate.month} / ${widget.startDate.year}',
                 style: TextStyle(
                     fontSize: 16, color: Color.fromARGB(255, 70, 70, 70)),
               ),
@@ -132,22 +130,20 @@ class _PieDoneChartState extends State<PieDoneChart> {
 
     setState(() {
       for (var item in listAccept) {
-        if (item.startDate!.compareTo(DateTime.now()) > 0) {
-          notStart++;
-        } else if (item.isDone!) {
-          done++;
+        if (item.isImportant!) {
+          im++;
         } else {
-          notDone++;
+          notIm++;
         }
       }
     });
 
     setState(() {
       chartData = [
-        ChartData('Hoàn thành', done, Color.fromARGB(255, 120, 231, 80),
-            'Hoàn thành: ${((done * 100) / (done + notDone)).toStringAsFixed(0)}%'),
-        ChartData('Chưa hoành thành', notDone, Color.fromARGB(255, 83, 118, 91),
-            'Chưa hoàn thành: ${((notDone * 100) / (done + notDone)).toStringAsFixed(0)}% '),
+        ChartData('Quan trọng', im, Color.fromARGB(255, 251, 255, 36),
+            'Quan trọng: ${((im * 100) / (im + notIm)).toStringAsFixed(0)}%'),
+        ChartData('Không quan trọng', notIm, Color.fromARGB(255, 157, 157, 157),
+            'Không quan trọng: ${((notIm * 100) / (im + notIm)).toStringAsFixed(0)}% '),
       ];
     });
   }
