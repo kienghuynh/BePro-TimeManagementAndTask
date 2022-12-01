@@ -1,3 +1,4 @@
+import 'package:bepro/Utility/utilities.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -64,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _image('assets/background-login.png', 220),
+                Utility().ImageWidget('assets/background-login.png', 220),
                 const SizedBox(height: 0),
                 _EmailField('Email...', emailController, Icon(Icons.mail)),
                 const SizedBox(height: 15),
@@ -105,18 +106,6 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _image(String url, double height) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          alignment: Alignment(0, -0.8),
-          image: ExactAssetImage('$url'),
-        ),
-      ),
-      height: height,
     );
   }
 

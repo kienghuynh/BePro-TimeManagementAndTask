@@ -92,15 +92,7 @@ class _TaskPageState extends State<TaskPage> {
               style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
             ),
           ),
-          // actions: [
-          //   Builder(
-          //     builder: (context) => IconButton(
-          //       icon: Icon(Icons.settings),
-          //       onPressed: () => Scaffold.of(context).openEndDrawer(),
-          //       tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          //     ),
-          //   ),
-          // ],
+          
         ),
         body: _pageWidget(),
         extendBody: true,
@@ -113,380 +105,412 @@ class _TaskPageState extends State<TaskPage> {
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.only(left: 5, top: 5, right: 5),
-            child: Form(
-                key: _formKey,
-                child: Column(children: [
-                  //_introText(),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(18)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _allTaskButton(),
-                              flex: 4,
-                            ),
-                            //Expanded(child: SizedBox(),),
-                            Expanded(
-                              child: _textCount(
-                                  countAllTask, Color.fromARGB(255, 0, 0, 0)),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _bordertop(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _todayButton(),
-                              flex: 4,
-                            ),
-                            //Expanded(child: SizedBox(),),
-                            Expanded(
-                              child: _textCount(
-                                  countTodayTask, Color.fromARGB(255, 0, 0, 0)),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [ClockText()],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _bordertop(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(child: _weekButton(), flex: 4),
-                            Expanded(
-                              flex: 1,
-                              child: _textCount(
-                                  countWeekTask, Color.fromARGB(255, 0, 0, 0)),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [ClockTextWeek()],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _bordertop(),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Expanded(child: _upcomingButton(), flex: 4),
-                        //     Expanded(
-                        //       child:
-                        //           _textCount("0", Color.fromARGB(255, 0, 0, 0)),
-                        //     )
-                        //   ],
-                        // ),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
-                        // _bordertop(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(child: _importantButton(), flex: 4),
-                            Expanded(
-                              child: _textCount(countImportantTask,
-                                  Color.fromARGB(255, 0, 0, 0)),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _bordertop(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(child: _completedButton(), flex: 4),
-                            Expanded(
-                              child: _textCount(
-                                  countDoneTask, Color.fromARGB(255, 0, 0, 0)),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _bordertop(),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(18)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 15,
-                        ),
-                        _categoryButton(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  )
-                ])),
-          ),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Form(
+            key: _formKey,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [
+              Row(children: [Container(child: _introText(),)],),
+              Row(children: [Container(child: _introTextAmount(),)],),
+              Row(children: [
+                  Container(width: 350 ,child: Utility().ImageWidget('assets/background-login.png', 220)),
+                  //Container(child: Text('data'),width: 100,color: Color.fromARGB(255, 31, 229, 24) ),
+                  ],),
+              Row(children: [_allTaskButton()],),
+              SizedBox(height: 15,),
+              Row(children: [_todayButton(),_weekButton()],),
+              SizedBox(height: 15,),
+              Row(children: [_importantButton(),_completedButton()],),
+              SizedBox(height: 45,),
+              Row(children: [_categoryButton()],),
+            ],)),
         ),
       ),
     );
   }
 
+  Widget _introText() {
+    return Container(
+      margin: EdgeInsets.only(top: 25, left: 25),
+      child: 
+          Row(
+            children: [
+              Icon(
+                Icons.waving_hand_outlined,
+                color: Color.fromARGB(255, 81, 177, 168),
+                size: 40,
+              ),
+              Text(
+                '  Hi ${loggedInUser.fullName} ',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontStyle: FontStyle.italic,
+                    color: Color.fromARGB(255, 81, 177, 168)),
+              )
+            ],
+          )
+      );
+  }
+  Widget _introTextAmount() {
+    return Container(
+      child: 
+          Row(
+            children: [
+              
+              Text(
+                (countTodayTask==0) 
+                ? '                   Hôm nay bạn có $countTodayTask việc !' 
+                : '                   Hôm nay bạn không có việc !',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    color: Color.fromARGB(255, 88, 88, 88)),
+              )
+            ],
+          )
+      );
+  }
+
   Widget _weekButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.transparent)),
-        onPressed: () {
-          NavigationService().navigateToScreen(CurrentWeekPage());
-        },
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.assignment_rounded,
-                  color: Color.fromARGB(255, 255, 88, 10),
-                  size: 30,
-                )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "        Tuần này",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ))
-          ],
-        ));
+    return Container(
+      height: 100,
+      margin: EdgeInsets.only(left: 10),
+      width: 170,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+            Color.fromARGB(255, 200, 247, 242),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+          ], begin: Alignment.centerRight, end: Alignment.centerLeft),
+              //color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromARGB(255, 81, 177, 168),
+                    blurRadius: 1,
+                    //spreadRadius: 1,
+                    offset: Offset(1, 1))
+              ]
+              ),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.transparent)),
+          onPressed: () {
+            NavigationService().navigateToScreen(CurrentWeekPage());
+          },
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.assignment_rounded,
+                    color: Color.fromARGB(255, 255, 88, 10),
+                    size: 30,
+                  )),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "        Tuần này",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      height: 1.4,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ))
+            ],
+          )),
+    );
   }
 
   Widget _allTaskButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.transparent)),
-        onPressed: () {
-          NavigationService().navigateToScreen(MonthTaskPage());
-        },
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.article_outlined,
-                  color: Color.fromARGB(255, 84, 155, 255),
-                  size: 30,
-                )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "        Danh sách toàn bộ",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ))
-          ],
-        ));
+    return Container(
+      height: 100,
+      margin: EdgeInsets.only(left: 10),
+      width: 350,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+            Color.fromARGB(255, 200, 247, 242),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+          ], begin: Alignment.centerRight, end: Alignment.centerLeft),
+              //color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromARGB(255, 81, 177, 168),
+                    blurRadius: 1,
+                    offset: Offset(1, 1))
+              ]),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Color.fromARGB(0, 44, 44, 44))),
+          onPressed: () {
+            NavigationService().navigateToScreen(MonthTaskPage());
+          },
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.article_outlined,
+                    color: Color.fromARGB(255, 84, 155, 255),
+                    size: 30,
+                  )),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "        Danh sách tháng",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      height: 1.4,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 81, 81, 81),
+                    ),
+                  ))
+            ],
+          )),
+    );
   }
 
   Widget _todayButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.transparent)),
-        onPressed: () {
-          NavigationService().navigateToScreen(TodayPage());
-        },
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.article_outlined,
-                  color: Color.fromARGB(255, 255, 12, 57),
-                  size: 30,
-                )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "        Hôm nay",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ))
-          ],
-        ));
-  }
-
-  Widget _upcomingButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.transparent)),
-        onPressed: () {},
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.calendar_month_outlined,
-                  color: Color.fromARGB(255, 54, 255, 238),
-                  size: 30,
-                )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "        Sắp tới",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ))
-          ],
-        ));
+    return Container(
+      height: 100,
+      margin: EdgeInsets.only(left: 10),
+      width: 170,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+            Color.fromARGB(255, 200, 247, 242),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
+              //color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromARGB(255, 81, 177, 168),
+                    blurRadius: 1,
+                    //spreadRadius: 1,
+                    offset: Offset(1, 1))
+              ]),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.transparent)),
+          onPressed: () {
+            NavigationService().navigateToScreen(TodayPage());
+          },
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.article_outlined,
+                    color: Color.fromARGB(255, 255, 12, 57),
+                    size: 30,
+                  )),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "        Hôm nay",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      height: 1.4,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ))
+            ],
+          )),
+    );
   }
 
   Widget _importantButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.transparent)),
-        onPressed: () {
-          NavigationService().navigateToScreen(ImportantPage());
-        },
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.grade_outlined,
-                  color: Color.fromARGB(255, 255, 218, 35),
-                  size: 30,
-                )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "        Quan trọng",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ))
-          ],
-        ));
+    return Container(
+      height: 100,
+      width: 170,
+      margin: EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+            Color.fromARGB(255, 244, 248, 167),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
+              //color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Color.fromARGB(255, 231, 215, 139)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromARGB(255, 224, 210, 139),
+                    blurRadius: 1,
+                    //spreadRadius: 1,
+                    offset: Offset(1, 1))
+              ]),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.transparent)),
+          onPressed: () {
+            NavigationService().navigateToScreen(ImportantPage());
+          },
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.grade,
+                    color: Color.fromARGB(255, 255, 218, 35),
+                    size: 30,
+                  )),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "        Việc quan \n            trọng",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ))
+            ],
+          )),
+    );
   }
 
   Widget _completedButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.transparent)),
-        onPressed: () {
-          NavigationService().navigateToScreen(DonePage());
-        },
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.done_all_outlined,
-                  color: Color.fromARGB(255, 67, 227, 123),
-                  size: 30,
-                )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "        Đã hoàn thành",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ))
-          ],
-        ));
+    return Container(
+      height: 100,
+      width: 170,
+      margin: EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+            Color.fromARGB(255, 190, 248, 167),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
+              //color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Color.fromARGB(255, 166, 228, 137)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromARGB(255, 152, 218, 136),
+                    blurRadius: 1,
+                    //spreadRadius: 1,
+                    offset: Offset(1, 1))
+              ]),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.transparent)),
+          onPressed: () {
+            NavigationService().navigateToScreen(DonePage());
+          },
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.done_all_outlined,
+                    color: Color.fromARGB(255, 67, 227, 123),
+                    size: 30,
+                  )),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "            Viêc đã \n         hoàn thành",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ))
+            ],
+          )),
+    );
   }
 
   Widget _categoryButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.transparent)),
-        onPressed: () {
-          NavigationService().navigateToScreen(CategoryPage());
-        },
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.note_alt,
-                  color: Color.fromARGB(255, 71, 90, 89),
-                  size: 30,
-                )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "        Loại công việc",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ))
-          ],
-        ));
+    return Container(
+      height: 100,
+      width: 350,
+      margin: EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+            Color.fromARGB(255, 167, 248, 248),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 255, 255, 255),
+          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
+              //color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Color.fromARGB(255, 130, 218, 215)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromARGB(255, 130, 218, 215),
+                    blurRadius: 1,
+                    //spreadRadius: 1,
+                    offset: Offset(1, 1))
+              ]),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.transparent)),
+          onPressed: () {
+            NavigationService().navigateToScreen(CategoryPage());
+          },
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.note_alt,
+                    color: Color.fromARGB(255, 71, 90, 89),
+                    size: 30,
+                  )),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "        Loại công việc",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ))
+            ],
+          )),
+    );
   }
 
   Widget _textCount(String text, Color color) {
@@ -508,8 +532,8 @@ class _TaskPageState extends State<TaskPage> {
 
   Widget _btnAddFloating() {
     return Container(
-      height: 70.0,
-      width: 70.0,
+      height: 50.0,
+      width: 50.0,
       child: FittedBox(
         child: FloatingActionButton(
             onPressed: () {
@@ -520,7 +544,7 @@ class _TaskPageState extends State<TaskPage> {
               });
               showDialogCreateTask();
             },
-            backgroundColor: Color.fromARGB(255, 95, 255, 100),
+            backgroundColor: Color.fromARGB(255, 95, 255, 218),
             child: Icon(
               Icons.add,
               color: Colors.white,
@@ -766,7 +790,7 @@ class _TaskPageState extends State<TaskPage> {
     if (startDate != null &&
         deadline != null &&
         startDate!.compareTo(deadline!) < 0 &&
-        selectedValue!.trim()!="") {
+        selectedValue!.trim() != "") {
       await firebaseFirestore
           .collection("users")
           .doc(user!.uid)

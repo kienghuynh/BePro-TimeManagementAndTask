@@ -265,4 +265,16 @@ class Utility {
     }
     return false;
   }
+
+  Widget ImageWidget(String url, double height) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          alignment: Alignment(0, -0.8),
+          image: AssetImage('$url'),
+        ),
+      ),
+      height: height,
+    );
+  }
 }
