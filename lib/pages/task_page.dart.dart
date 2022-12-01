@@ -216,12 +216,12 @@ class _TaskPageState extends State<TaskPage> {
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "        Tuần này",
+                    "        Tuần này \n              ($countWeekTask)",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.4,
                       fontSize: 20,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Color.fromARGB(255, 99, 99, 99),
                     ),
                   ))
             ],
@@ -277,7 +277,7 @@ class _TaskPageState extends State<TaskPage> {
                     style: TextStyle(
                       height: 1.4,
                       fontSize: 20,
-                      color: Color.fromARGB(255, 81, 81, 81),
+                      color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
             ],
@@ -329,12 +329,12 @@ class _TaskPageState extends State<TaskPage> {
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "        Hôm nay",
+                    "        Hôm nay\n              ($countTodayTask)    ",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.4,
                       fontSize: 20,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
             ],
@@ -391,7 +391,7 @@ class _TaskPageState extends State<TaskPage> {
                     style: TextStyle(
                       height: 1.5,
                       fontSize: 18,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
             ],
@@ -443,12 +443,12 @@ class _TaskPageState extends State<TaskPage> {
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "            Viêc đã \n         hoàn thành",
+                    "            Việc đã \n         hoàn thành",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.5,
                       fontSize: 18,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
             ],
@@ -803,38 +803,6 @@ class _TaskPageState extends State<TaskPage> {
       Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu và kết thúc');
     }
   }
-
-  // void printt() {
-  //   var uuid = Uuid().v4();
-  //   Random random = Random();
-  //   TaskModel task = TaskModel();
-
-  //   task.uid = uuid;
-  //   task.title = titleController.text;
-  //   task.detail = detailController.text;
-  //   task.colorCode = random.nextInt(9).toString();
-  //   task.createAt = DateTime.now();
-  //   task.deadline = deadline;
-  //   task.doneDate = DateTime(0001, 01, 01, 01, 01, 01);
-  //   task.isDone = false;
-  //   task.isImportant = isImportant;
-  //   task.note = noteController.text;
-  //   task.startDate = startDate;
-  //   task.category = selectedValue;
-
-  //   print('uid: ${task.uid}');
-  //   print('title: ${task.title}');
-  //   print('detail: ${task.detail}');
-  //   print('màu: ${task.colorCode}');
-  //   print('create: ${task.createAt}');
-  //   print('dead: ${task.deadline}');
-  //   print('done: ${task.doneDate}');
-  //   print('isdone: ${task.isDone}');
-  //   print('sao: ${task.isImportant}');
-  //   print('note: ${task.note}');
-  //   print('start: ${task.startDate}');
-  //   print('cate: ${task.category}');
-  // }
 
   List<int> _getDividersIndexes() {
     List<int> _dividersIndexes = [];

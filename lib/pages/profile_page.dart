@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     logOut();
                   },
                   icon: Icon(
-                    Icons.delete_forever,
+                    Icons.logout_outlined,
                     color: Colors.redAccent,
                     size: 30,
                   ),

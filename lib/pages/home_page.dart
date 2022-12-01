@@ -53,8 +53,8 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(10),
             tabs: [
               GButton(
-                icon: Icons.calendar_view_day_outlined,
-                text: "Danh sách",
+                icon: Icons.home_outlined,
+                text: "Trang chủ",
                 textStyle: TextStyle(
                   fontSize: 16,
                   color: Color.fromARGB(255, 255, 255, 255),
