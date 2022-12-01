@@ -60,7 +60,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
                 showPickerMonth();
               },
               icon: Icon(
-                Icons.search_outlined,
+                Icons.calendar_month_outlined,
                 size: 34,
                 color: Color.fromARGB(255, 99, 216, 204),
               ),
