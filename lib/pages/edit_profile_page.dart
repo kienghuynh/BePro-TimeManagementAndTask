@@ -1,4 +1,5 @@
 import 'package:bepro/models/user_model.dart';
+import 'package:bepro/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -186,7 +187,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             'email': emailController.text.trim()
           }).then((value) {
             changPassword();
-            Navigator.of(context).pop();
+            NavigationService().goBack();
           }).catchError((error) => print("Có lỗi xảy ra $error"));
         }
       },
@@ -210,7 +211,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     try {
       await user?.updatePassword(passwordController.text);
     } catch (error) {
-      Fluttertoast.showToast(toastLength: Toast.LENGTH_LONG ,msg: error.toString());
+      Fluttertoast.showToast(
+          toastLength: Toast.LENGTH_LONG, msg: error.toString());
     }
   }
 }

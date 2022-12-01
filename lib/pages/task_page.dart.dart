@@ -92,7 +92,6 @@ class _TaskPageState extends State<TaskPage> {
               style: TextStyle(color: Color.fromARGB(255, 99, 216, 204)),
             ),
           ),
-          
         ),
         body: _pageWidget(),
         extendBody: true,
@@ -108,22 +107,56 @@ class _TaskPageState extends State<TaskPage> {
         child: Padding(
           padding: EdgeInsets.all(10),
           child: Form(
-            key: _formKey,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [
-              Row(children: [Container(child: _introText(),)],),
-              Row(children: [Container(child: _introTextAmount(),)],),
-              Row(children: [
-                  Container(width: 350 ,child: Utility().ImageWidget('assets/background-login.png', 220)),
-                  //Container(child: Text('data'),width: 100,color: Color.fromARGB(255, 31, 229, 24) ),
-                  ],),
-              Row(children: [_allTaskButton()],),
-              SizedBox(height: 15,),
-              Row(children: [_todayButton(),_weekButton()],),
-              SizedBox(height: 15,),
-              Row(children: [_importantButton(),_completedButton()],),
-              SizedBox(height: 45,),
-              Row(children: [_categoryButton()],),
-            ],)),
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        child: _introText(),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        child: _introTextAmount(),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                          width: 350,
+                          child: Utility()
+                              .ImageWidget('assets/background-login.png', 220)),
+                      //Container(child: Text('data'),width: 100,color: Color.fromARGB(255, 31, 229, 24) ),
+                    ],
+                  ),
+                  Row(
+                    children: [_allTaskButton()],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [_todayButton(), _weekButton()],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [_importantButton(), _completedButton()],
+                  ),
+                  SizedBox(
+                    height: 45,
+                  ),
+                  Row(
+                    children: [_categoryButton()],
+                  ),
+                ],
+              )),
         ),
       ),
     );
@@ -131,44 +164,40 @@ class _TaskPageState extends State<TaskPage> {
 
   Widget _introText() {
     return Container(
-      margin: EdgeInsets.only(top: 25, left: 25),
-      child: 
-          Row(
-            children: [
-              Icon(
-                Icons.waving_hand_outlined,
-                color: Color.fromARGB(255, 81, 177, 168),
-                size: 40,
-              ),
-              Text(
-                '  Hi ${loggedInUser.fullName} ',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    color: Color.fromARGB(255, 81, 177, 168)),
-              )
-            ],
-          )
-      );
+        margin: EdgeInsets.only(top: 25, left: 25),
+        child: Row(
+          children: [
+            Icon(
+              Icons.waving_hand_outlined,
+              color: Color.fromARGB(255, 81, 177, 168),
+              size: 40,
+            ),
+            Text(
+              '  Hi ${loggedInUser.fullName} ',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                  color: Color.fromARGB(255, 81, 177, 168)),
+            )
+          ],
+        ));
   }
+
   Widget _introTextAmount() {
     return Container(
-      child: 
-          Row(
-            children: [
-              
-              Text(
-                (countTodayTask==0) 
-                ? '                   Hôm nay bạn có $countTodayTask việc !' 
-                : '                   Hôm nay bạn không có việc !',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                    color: Color.fromARGB(255, 88, 88, 88)),
-              )
-            ],
-          )
-      );
+        child: Row(
+      children: [
+        Text(
+          (countTodayTask != 0)
+              ? '                   Hôm nay bạn có $countTodayTask việc !'
+              : '                   Hôm nay bạn không có việc !',
+          style: TextStyle(
+              fontSize: 16,
+              fontStyle: FontStyle.italic,
+              color: Color.fromARGB(255, 88, 88, 88)),
+        )
+      ],
+    ));
   }
 
   Widget _weekButton() {
@@ -177,7 +206,7 @@ class _TaskPageState extends State<TaskPage> {
       margin: EdgeInsets.only(left: 10),
       width: 170,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
+          gradient: LinearGradient(colors: [
             Color.fromARGB(255, 200, 247, 242),
             Color.fromARGB(255, 255, 255, 255),
             Color.fromARGB(255, 255, 255, 255),
@@ -187,17 +216,16 @@ class _TaskPageState extends State<TaskPage> {
             Color.fromARGB(255, 255, 255, 255),
             Color.fromARGB(255, 255, 255, 255),
           ], begin: Alignment.centerRight, end: Alignment.centerLeft),
-              //color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(255, 81, 177, 168),
-                    blurRadius: 1,
-                    //spreadRadius: 1,
-                    offset: Offset(1, 1))
-              ]
-              ),
+          //color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(255, 81, 177, 168),
+                blurRadius: 1,
+                //spreadRadius: 1,
+                offset: Offset(1, 1))
+          ]),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.transparent)),
@@ -220,7 +248,7 @@ class _TaskPageState extends State<TaskPage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.4,
-                      fontSize: 20,
+                      fontSize: 15,
                       color: Color.fromARGB(255, 99, 99, 99),
                     ),
                   ))
@@ -235,7 +263,7 @@ class _TaskPageState extends State<TaskPage> {
       margin: EdgeInsets.only(left: 10),
       width: 350,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
+          gradient: LinearGradient(colors: [
             Color.fromARGB(255, 200, 247, 242),
             Color.fromARGB(255, 255, 255, 255),
             Color.fromARGB(255, 255, 255, 255),
@@ -245,15 +273,15 @@ class _TaskPageState extends State<TaskPage> {
             Color.fromARGB(255, 255, 255, 255),
             Color.fromARGB(255, 255, 255, 255),
           ], begin: Alignment.centerRight, end: Alignment.centerLeft),
-              //color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(255, 81, 177, 168),
-                    blurRadius: 1,
-                    offset: Offset(1, 1))
-              ]),
+          //color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(255, 81, 177, 168),
+                blurRadius: 1,
+                offset: Offset(1, 1))
+          ]),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
               side: BorderSide(color: Color.fromARGB(0, 44, 44, 44))),
@@ -276,7 +304,7 @@ class _TaskPageState extends State<TaskPage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.4,
-                      fontSize: 20,
+                      fontSize: 15,
                       color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
@@ -291,26 +319,30 @@ class _TaskPageState extends State<TaskPage> {
       margin: EdgeInsets.only(left: 10),
       width: 170,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 200, 247, 242),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
-              //color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(255, 81, 177, 168),
-                    blurRadius: 1,
-                    //spreadRadius: 1,
-                    offset: Offset(1, 1))
-              ]),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 200, 247, 242),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
+          //color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(255, 81, 177, 168),
+                blurRadius: 1,
+                //spreadRadius: 1,
+                offset: Offset(1, 1))
+          ]),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.transparent)),
@@ -333,7 +365,7 @@ class _TaskPageState extends State<TaskPage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.4,
-                      fontSize: 20,
+                      fontSize: 15,
                       color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
@@ -348,26 +380,30 @@ class _TaskPageState extends State<TaskPage> {
       width: 170,
       margin: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 244, 248, 167),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
-              //color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Color.fromARGB(255, 231, 215, 139)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(255, 224, 210, 139),
-                    blurRadius: 1,
-                    //spreadRadius: 1,
-                    offset: Offset(1, 1))
-              ]),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 244, 248, 167),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
+          //color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Color.fromARGB(255, 231, 215, 139)),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(255, 224, 210, 139),
+                blurRadius: 1,
+                //spreadRadius: 1,
+                offset: Offset(1, 1))
+          ]),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.transparent)),
@@ -390,7 +426,7 @@ class _TaskPageState extends State<TaskPage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.5,
-                      fontSize: 18,
+                      fontSize: 15,
                       color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
@@ -405,26 +441,30 @@ class _TaskPageState extends State<TaskPage> {
       width: 170,
       margin: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 190, 248, 167),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
-              //color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Color.fromARGB(255, 166, 228, 137)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(255, 152, 218, 136),
-                    blurRadius: 1,
-                    //spreadRadius: 1,
-                    offset: Offset(1, 1))
-              ]),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 190, 248, 167),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
+          //color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Color.fromARGB(255, 166, 228, 137)),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(255, 152, 218, 136),
+                blurRadius: 1,
+                //spreadRadius: 1,
+                offset: Offset(1, 1))
+          ]),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.transparent)),
@@ -447,7 +487,7 @@ class _TaskPageState extends State<TaskPage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       height: 1.5,
-                      fontSize: 18,
+                      fontSize: 15,
                       color: Color.fromARGB(255, 75, 75, 75),
                     ),
                   ))
@@ -462,26 +502,30 @@ class _TaskPageState extends State<TaskPage> {
       width: 350,
       margin: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 167, 248, 248),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-          ], begin: Alignment.centerRight, end: Alignment.centerLeft,),
-              //color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Color.fromARGB(255, 130, 218, 215)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(255, 130, 218, 215),
-                    blurRadius: 1,
-                    //spreadRadius: 1,
-                    offset: Offset(1, 1))
-              ]),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 167, 248, 248),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 255, 255, 255),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
+          //color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Color.fromARGB(255, 130, 218, 215)),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(255, 130, 218, 215),
+                blurRadius: 1,
+                //spreadRadius: 1,
+                offset: Offset(1, 1))
+          ]),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.transparent)),
@@ -638,7 +682,7 @@ class _TaskPageState extends State<TaskPage> {
                     Text(
                       '    Công việc quan trọng:      ',
                       style: TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0), fontSize: 18),
+                          color: Color.fromARGB(255, 0, 0, 0), fontSize: 13),
                     ),
                     ImportantButton(),
                   ]),
@@ -729,6 +773,7 @@ class _TaskPageState extends State<TaskPage> {
               maxTime: DateTime(2099, 12, 31),
               onChanged: (date) {}, onConfirm: (date) {
             startDate = date;
+            deadline = date.add(Duration(minutes: 30));
             NavigationService().goBack();
             showDialogCreateTask();
           },
@@ -738,7 +783,7 @@ class _TaskPageState extends State<TaskPage> {
       },
       label: Text(
         'Bắt đầu',
-        style: TextStyle(color: Colors.blue, fontSize: 18),
+        style: TextStyle(color: Colors.blue, fontSize: 13),
       ),
       icon: Icon(Icons.access_time),
     );
@@ -763,7 +808,7 @@ class _TaskPageState extends State<TaskPage> {
       },
       label: Text(
         'Kết thúc',
-        style: TextStyle(color: Colors.blue, fontSize: 18),
+        style: TextStyle(color: Colors.blue, fontSize: 13),
       ),
       icon: Icon(Icons.access_time),
     );
@@ -799,8 +844,10 @@ class _TaskPageState extends State<TaskPage> {
           .set(task.toMap());
       Fluttertoast.showToast(msg: "Đã thêm 1 công việc");
       NavigationService().goBack();
+    } else if (startDate == null || deadline == null) {
+      Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu trước kết thúc');
     } else {
-      Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu và kết thúc');
+      Fluttertoast.showToast(msg: 'Cần có loại công việc');
     }
   }
 

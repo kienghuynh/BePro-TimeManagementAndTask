@@ -119,10 +119,10 @@ class _CalendarPageState extends State<CalendarPage> {
             showAgenda: true,
             agendaViewHeight: 120,
             //appointmentDisplayCount: 3,
-            agendaItemHeight: 35,
+            agendaItemHeight: 38,
             agendaStyle: AgendaStyle(
                 appointmentTextStyle:
-                    TextStyle(fontSize: 17, color: Colors.black)),
+                    TextStyle(fontSize: 14, color: Colors.black)),
             appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
             ),
         dataSource: events,

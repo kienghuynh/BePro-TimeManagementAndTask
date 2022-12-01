@@ -160,7 +160,7 @@ class Utility {
         child: Text(
       "${date.hour}:${date.minute} ${date.day}/${date.month}/${date.year}",
       style: TextStyle(
-          fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500),
+          fontSize: 13, color: Colors.blue, fontWeight: FontWeight.w500),
     ));
   }
 
@@ -169,7 +169,7 @@ class Utility {
         child: Text(
       "${date.day}/${date.month}/${date.year}",
       style: TextStyle(
-          fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500),
+          fontSize: 13, color: Colors.blue, fontWeight: FontWeight.w500),
     ));
   }
 

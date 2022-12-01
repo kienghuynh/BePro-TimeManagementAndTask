@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class TodayPage extends StatefulWidget {
@@ -75,7 +76,7 @@ class _TodayPageState extends State<TodayPage> {
         .snapshots(includeMetadataChanges: true);
     return Container(
       height: 630,
-      margin: EdgeInsets.only(top: 15,bottom:10, left: 15, right: 15),
+      margin: EdgeInsets.only(top: 15, bottom: 10, left: 15, right: 15),
       child: StreamBuilder<QuerySnapshot>(
         stream: _taskStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -213,7 +214,21 @@ class _TodayPageState extends State<TodayPage> {
                                         TextButton.icon(
                                           label: Text(''),
                                           onPressed: () {
-                                            doneTask(data['uid']);
+                                            if (item.isDone!) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'việc này đã hoàn thành');
+                                            }else if (item.startDate!
+                                                    .compareTo(DateTime.now()) > 
+                                                0) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'Công việc này chưa bắt đầu !');
+                                            } else {
+                                              createPopUpDone(data['uid']);
+                                            }
+                                            
+                                            //doneTask(data['uid']);
                                           },
                                           icon: Icon(
                                             Icons.done_all,
@@ -241,7 +256,7 @@ class _TodayPageState extends State<TodayPage> {
                               ),
                             ),
                           )
-                        : Text(''));
+                        : null);
               }).toList(),
             );
           }
@@ -256,15 +271,19 @@ class _TodayPageState extends State<TodayPage> {
     DateTime now = DateTime.now();
     DateTime startToday = DateTime(now.year, now.month, now.day, 0, 0, 0);
 
-    if (start.year != startToday.year || end.year != startToday.year)
-      {return false;}
+    if (start.year != startToday.year || end.year != startToday.year) {
+      return false;
+    }
     if (start.month != startToday.month || end.month != startToday.month) {
       return false;
     }
     //bat dau hom nay hoac ket thuc hom nay
     if (start.day == startToday.day || end.day == startToday.day) return true;
     //bao gom ca hom nay
-    if (start.compareTo(startToday) < 0 && end.compareTo(startToday.add(Duration(hours: 23,minutes: 59,seconds: 59))) > 0) return true;
+    if (start.compareTo(startToday) < 0 &&
+        end.compareTo(
+                startToday.add(Duration(hours: 23, minutes: 59, seconds: 59))) >
+            0) return true;
     return false;
   }
 
@@ -314,6 +333,54 @@ class _TodayPageState extends State<TodayPage> {
         });
   }
 
+  void createPopUpDone(String uid) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: Container(
+              width: 150,
+              height: 50,
+              child: Center(
+                child: Text(
+                  'Bạn đã hoàn thành công việc này ?',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton.icon(
+                  onPressed: () {
+                    doneTask(uid);
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.done_all,
+                    color: Color.fromARGB(255, 113, 231, 111),
+                    size: 30,
+                  ),
+                  label: Text('Hoàn thành',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 113, 231, 111)))),
+              TextButton.icon(
+                  onPressed: () {
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.clear_outlined,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                  label: Text(
+                    'Không',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ))
+            ],
+          );
+        });
+  }
+
   void DeleteTask(String uid) {
     firebaseFirestore
         .collection("users")
@@ -333,7 +400,6 @@ class _TodayPageState extends State<TodayPage> {
         .set({
       'isDone': true,
       'doneDate': TaskModel().formatDate(doneDate),
-      
-    },SetOptions(merge: true));
+    }, SetOptions(merge: true));
   }
 }

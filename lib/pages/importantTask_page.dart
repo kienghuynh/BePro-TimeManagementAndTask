@@ -209,17 +209,6 @@ class _ImportantPageState extends State<ImportantPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               TextButton.icon(
-                                label: Text(''),
-                                onPressed: () {
-                                  doneTask(data['uid']);
-                                },
-                                icon: Icon(
-                                  Icons.done_all,
-                                  color: Color.fromARGB(255, 33, 242, 141),
-                                  size: 30,
-                                ),
-                              ),
-                              TextButton.icon(
                                 onPressed: () {
                                   createPopUpSureDelete(data['uid']);
                                 },

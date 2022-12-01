@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class CurrentWeekPage extends StatefulWidget {
@@ -74,8 +75,8 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
         .orderBy('createAt', descending: false)
         .snapshots(includeMetadataChanges: true);
     return Container(
-      height: 630,
-      margin: EdgeInsets.only(bottom:10, left: 15, right: 15),
+      height: 700,
+      margin: EdgeInsets.only(top:10, left: 15, right: 15),
       child: StreamBuilder<QuerySnapshot>(
         stream: _taskStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -213,7 +214,18 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
                                         TextButton.icon(
                                           label: Text(''),
                                           onPressed: () {
-                                            doneTask(data['uid']);
+                                            if (item.isDone!) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'việc này đã hoàn thành');
+                                            }else if (item.startDate!
+                                                    .compareTo(DateTime.now()) > 0) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'Công việc này chưa bắt đầu !');
+                                            } else {
+                                              createPopUpDone(data['uid']);
+                                            }
                                           },
                                           icon: Icon(
                                             Icons.done_all,
@@ -241,13 +253,61 @@ class _CurrentWeekPageState extends State<CurrentWeekPage> {
                               ),
                             ),
                           )
-                        : Text(''));
+                        : null);
               }).toList(),
             );
           }
         },
       ),
     );
+  }
+
+  void createPopUpDone(String uid) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: Container(
+              width: 150,
+              height: 50,
+              child: Center(
+                child: Text(
+                  'Bạn đã hoàn thành công việc này ?',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton.icon(
+                  onPressed: () {
+                    doneTask(uid);
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.done_all,
+                    color: Color.fromARGB(255, 113, 231, 111),
+                    size: 30,
+                  ),
+                  label: Text('Hoàn thành',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 113, 231, 111)))),
+              TextButton.icon(
+                  onPressed: () {
+                    NavigationService().goBack();
+                  },
+                  icon: Icon(
+                    Icons.clear_outlined,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                  label: Text(
+                    'Không',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ))
+            ],
+          );
+        });
   }
 
   bool compareWeekTask(String startDate, String deadline) {

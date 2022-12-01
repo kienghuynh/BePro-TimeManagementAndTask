@@ -209,7 +209,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 Text(
                   '    Công việc quan trọng:      ',
                   style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 18),
+                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 13),
                 ),
                 ImportantButton()
               ]),
@@ -229,7 +229,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 Text(
                   '    Công việc hoàn thành:      ',
                   style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 18),
+                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 13),
                 ),
                 DoneTaskButton()
               ]),
@@ -258,7 +258,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
       },
       label: Text(
         'Bắt đầu',
-        style: TextStyle(color: Colors.blue, fontSize: 18),
+        style: TextStyle(color: Colors.blue, fontSize: 13
+        ),
       ),
       icon: Icon(Icons.access_time),
     );
@@ -282,7 +283,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
       },
       label: Text(
         'Kết thúc',
-        style: TextStyle(color: Colors.blue, fontSize: 18),
+        style: TextStyle(color: Colors.blue, fontSize: 13
+        ),
       ),
       icon: Icon(Icons.access_time),
     );
@@ -372,7 +374,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
           .set(task.toMap());
       Fluttertoast.showToast(msg: "Đã cập nhập công việc");
     } else
-      (Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu sau kết thúc'));
+      (Fluttertoast.showToast(msg: 'Cần có thời gian bắt đầu trước kết thúc'));
   }
 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {

@@ -206,7 +206,7 @@ class _DetailTaskPageState extends State<DetailTaskPage> {
                   (widget.detailModel.isDone!)
                       ? ('Đã hoành thành lúc ${Utility().formatDateDisplay(widget.detailModel.doneDate)}')
                       : ('Chưa hoàn thành'),
-                  18,
+                  13,
                   FontWeight.normal,
                   (widget.detailModel.isDone!)
                       ? Color.fromARGB(255, 32, 176, 56)

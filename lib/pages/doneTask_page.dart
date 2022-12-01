@@ -73,7 +73,7 @@ class _DonePageState extends State<DonePage> {
         .where("isDone",isEqualTo: true)
         .snapshots(includeMetadataChanges: true);
     return Container(
-      height: 630,
+      height: 700,
       margin: EdgeInsets.only(bottom:10, left: 15, right: 15),
       child: StreamBuilder<QuerySnapshot>(
         stream: _taskStream,
@@ -85,164 +85,166 @@ class _DonePageState extends State<DonePage> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data =
-                    document.data()! as Map<String, dynamic>;
-                TaskModel item = TaskModel().fromJson(data);
-                // debugPrint(item.toMap().toString());
-                return Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(18),
-                      border:
-                          Border.all(color: Color.fromARGB(149, 194, 194, 194)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 5,
-                            spreadRadius: 1,
-                            offset: Offset(4, 4))
-                      ]),
-                  child: ListTile(
-                    onTap: () {
-                      NavigationService()
-                          .navigateToScreen(DetailTaskPage(detailModel: item));
-                    },
-                    title: Row(children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          data['title'],
-                          style: TextStyle(fontSize: 22),
-                        ),
-                      ),
-                      Expanded(
-                          child: (data['isImportant'])
-                              ? IconButton(
-                                  icon: Icon(Icons.star),
-                                  color: Colors.amber,
-                                  onPressed: () {},
-                                )
-                              : IconButton(
-                                  icon: Icon(Icons.star_border),
-                                  color: Colors.amber,
-                                  onPressed: () {},
-                                )),
-                    ]),
-                    subtitle: Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Column(children: [
-                        Utility().BottomLine(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(children: [
-                          Expanded(
-                            flex: 4,
-                            child: Text(
-                              data['detail'],
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(195, 90, 90, 90)),
-                            ),
-                          ),
+            return Expanded(
+              child: ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  TaskModel item = TaskModel().fromJson(data);
+                  // debugPrint(item.toMap().toString());
+                  return Container(
+                    margin: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(18),
+                        border:
+                            Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 5,
+                              spreadRadius: 1,
+                              offset: Offset(4, 4))
                         ]),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Utility().BottomLine(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(children: [
-                          Column(
-                            children: [
-                              Center(child: Icon(Icons.edit_calendar))
-                            ],
+                    child: ListTile(
+                      onTap: () {
+                        NavigationService()
+                            .navigateToScreen(DetailTaskPage(detailModel: item));
+                      },
+                      title: Row(children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            data['title'],
+                            style: TextStyle(fontSize: 22),
                           ),
-                          Column(children: [
-                            Row(
-                              children: [
-                                Text(
-                                  '  Từ: ${data['startDate']}',
-                                  style: TextStyle(color: Colors.redAccent),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '   Tới: ${data['deadline']}',
-                                  style: TextStyle(color: Colors.redAccent),
-                                ),
-                              ],
+                        ),
+                        Expanded(
+                            child: (data['isImportant'])
+                                ? IconButton(
+                                    icon: Icon(Icons.star),
+                                    color: Colors.amber,
+                                    onPressed: () {},
+                                  )
+                                : IconButton(
+                                    icon: Icon(Icons.star_border),
+                                    color: Colors.amber,
+                                    onPressed: () {},
+                                  )),
+                      ]),
+                      subtitle: Container(
+                        margin: EdgeInsets.only(top: 10, bottom: 10),
+                        child: Column(children: [
+                          Utility().BottomLine(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(children: [
+                            Expanded(
+                              flex: 4,
+                              child: Text(
+                                data['detail'],
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: Color.fromARGB(195, 90, 90, 90)),
+                              ),
                             ),
                           ]),
-                        ]),
-                        Row(
-                          children: [
-                            SizedBox(
-                              height: 15,
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Utility().BottomLine(),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-
-              // ngày hoàn thành
-              Utility().DisplayTextDetail(
-                Icons.done_all,
-                ('Đã hoành thành'),
-                  18,
-                  FontWeight.normal,
-                      Color.fromARGB(255, 32, 176, 56)
-              ),
-              SizedBox(height: 40,),  
-              Utility().BottomLine(),
-              SizedBox(
-                height: 20,
-              ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              
-                              TextButton.icon(
-                                onPressed: () {
-                                  createPopUpSureDelete(data['uid']);
-                                },
-                                icon: Icon(
-                                  Icons.delete_forever,
-                                  color: Colors.redAccent,
-                                  size: 30,
-                                ),
-                                label: Text(''),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Utility().BottomLine(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(children: [
+                            Column(
+                              children: [
+                                Center(child: Icon(Icons.edit_calendar))
+                              ],
+                            ),
+                            Column(children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    '  Từ: ${data['startDate']}',
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                ],
                               ),
                               SizedBox(
-                                width: 22,
+                                height: 10,
                               ),
-                            ])
-                      ]),
+                              Row(
+                                children: [
+                                  Text(
+                                    '   Tới: ${data['deadline']}',
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                          ]),
+                          Row(
+                            children: [
+                              SizedBox(
+                                height: 15,
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Utility().BottomLine(),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+            
+                // ngày hoàn thành
+                Utility().DisplayTextDetail(
+                  Icons.done_all,
+                  ('Đã hoành thành'),
+                    18,
+                    FontWeight.normal,
+                        Color.fromARGB(255, 32, 176, 56)
+                ),
+                SizedBox(height: 40,),  
+                Utility().BottomLine(),
+                SizedBox(
+                  height: 20,
+                ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                
+                                TextButton.icon(
+                                  onPressed: () {
+                                    createPopUpSureDelete(data['uid']);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete_forever,
+                                    color: Colors.redAccent,
+                                    size: 30,
+                                  ),
+                                  label: Text(''),
+                                ),
+                                SizedBox(
+                                  width: 22,
+                                ),
+                              ])
+                        ]),
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             );
           }
         },

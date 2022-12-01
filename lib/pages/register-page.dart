@@ -1,4 +1,5 @@
 import 'package:bepro/Utility/utilities.dart';
+import 'package:bepro/models/category_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -339,13 +340,18 @@ class _RegisterPageState extends State<RegisterPage> {
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
 
+    CategoryModel cate = CategoryModel();
+    var v1 = Uuid().v4();
+    cate.uid = v1;
+    cate.categoryName = 'Cá nhân';
+
     userModel.email = user!.email;
     userModel.uid = user.uid;
     userModel.password = passwordController.text;
     userModel.fullName = fullNameController.text;
     userModel.phoneNumber = phoneController.text;
 
-    
+    await firebaseFirestore.collection("users").doc(user.uid).set(cate.toMap());
 
     await firebaseFirestore
         .collection("users")

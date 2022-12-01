@@ -11,6 +11,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MonthTaskPage extends StatefulWidget {
   const MonthTaskPage({super.key});
@@ -75,38 +76,45 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
     return Container(
       child: SingleChildScrollView(
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              disPlayCurrentTime(),
-              (startDate == null || deadline == null)
-                  ? list(DateTime(DateTime.now().year,DateTime.now().month,1,0,0,0),
-                      DateTime(DateTime.now().year,DateTime.now().month+1,0,0,0,0))
-                  : list(startDate!, deadline!)
-            ],
-          )),
+        //mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          disPlayCurrentTime(),
+          (startDate == null || deadline == null)
+              ? list(
+                  DateTime(
+                      DateTime.now().year, DateTime.now().month, 1, 0, 0, 0),
+                  DateTime(DateTime.now().year, DateTime.now().month + 1, 0, 0,
+                      0, 0))
+              : list(startDate!, deadline!)
+        ],
+      )),
     );
   }
 
-  Widget disPlayCurrentTime(){
+  Widget disPlayCurrentTime() {
     return Container(
-      margin: EdgeInsets.only(top: 10, bottom: 10),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
-        borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-          color: Color.fromARGB(149, 194, 194, 194)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 5,
-              spreadRadius: 1,
-              offset: Offset(4, 4))
-      ]),
-      child: (startDate == null || deadline == null) 
-        ? Text('Danh sách công việc cho tháng ${DateTime.now().month}', style: TextStyle( fontSize: 18),)
-        : Text('Danh sách công việc cho tháng ${startDate!.month}', style: TextStyle( fontSize: 18),)
-    );
+        margin: EdgeInsets.only(top: 10, bottom: 10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Color.fromARGB(255, 255, 255, 255),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Color.fromARGB(149, 194, 194, 194)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 5,
+                  spreadRadius: 1,
+                  offset: Offset(4, 4))
+            ]),
+        child: (startDate == null || deadline == null)
+            ? Text(
+                'Danh sách công việc cho tháng ${DateTime.now().month}',
+                style: TextStyle(fontSize: 18),
+              )
+            : Text(
+                'Danh sách công việc cho tháng ${startDate!.month}',
+                style: TextStyle(fontSize: 18),
+              ));
   }
 
   Widget list(DateTime startDate, DateTime deadline) {
@@ -119,7 +127,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
         .snapshots(includeMetadataChanges: true);
     return Container(
       height: 630,
-      margin: EdgeInsets.only(bottom:10, left: 15, right: 15),
+      margin: EdgeInsets.only(bottom: 10, left: 15, right: 15),
       child: StreamBuilder<QuerySnapshot>(
         stream: _taskStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -131,7 +139,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
             );
           } else if (startDate == null || deadline == null) {
             return Center(
-              child: Text(''),
+              child: Text('aa'),
             );
           } else {
             return ListView(
@@ -147,7 +155,8 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
                             startDate.toString(),
                             deadline.toString()))
                         ? Container(
-                            margin: EdgeInsets.only(bottom: 10,left: 10, right: 10),
+                            margin: EdgeInsets.only(
+                                bottom: 10, left: 10, right: 10),
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 255, 255, 255),
@@ -263,7 +272,18 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
                                         TextButton.icon(
                                           label: Text(''),
                                           onPressed: () {
-                                            createPopUpDone(data['uid']);
+                                            if (item.isDone!) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'việc này đã hoàn thành');
+                                            } else if (item.startDate!
+                                                    .compareTo(DateTime.now()) > 0) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'Công việc này chưa bắt đầu !');
+                                            } else {
+                                              createPopUpDone(data['uid']);
+                                            }
                                           },
                                           icon: Icon(
                                             Icons.done_all,
@@ -291,7 +311,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
                               ),
                             ),
                           )
-                        : Text(''));
+                        : null);
               }).toList(),
             );
           }
@@ -357,7 +377,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
               child: Center(
                 child: Text(
                   'Bạn đã hoàn thành công việc này ?',
-                  style: TextStyle(fontSize: 21),
+                  style: TextStyle(fontSize: 14),
                 ),
               ),
             ),
@@ -374,7 +394,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
                   ),
                   label: Text('Hoàn thành',
                       style: TextStyle(
-                          fontSize: 21,
+                          fontSize: 14,
                           color: Color.fromARGB(255, 113, 231, 111)))),
               TextButton.icon(
                   onPressed: () {
@@ -387,7 +407,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
                   ),
                   label: Text(
                     'Không',
-                    style: TextStyle(fontSize: 21, color: Colors.grey),
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
                   ))
             ],
           );
@@ -414,7 +434,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
       },
       label: Text(
         'Từ',
-        style: TextStyle(color: Colors.blue, fontSize: 18),
+        style: TextStyle(color: Colors.blue, fontSize: 13),
       ),
       icon: Icon(Icons.access_time),
     );
@@ -440,7 +460,7 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
       },
       label: Text(
         'Đến',
-        style: TextStyle(color: Colors.blue, fontSize: 18),
+        style: TextStyle(color: Colors.blue, fontSize: 13),
       ),
       icon: Icon(Icons.access_time),
     );
@@ -550,5 +570,3 @@ class _MonthTaskPageState extends State<MonthTaskPage> {
     }, locale: LocaleType.vi);
   }
 }
-
-
