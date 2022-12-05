@@ -168,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
       validator: (value) {
         if (value!.isEmpty) return ('Mật khẩu không để trống.');
         if (!RegExp(r'^.{6,}$').hasMatch(value)) {
-          return ('PMật khẩu từ 6 ký tự.');
+          return ('Mật khẩu từ 6 ký tự.');
         }
         return null;
       },
@@ -325,7 +325,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void SignUp(String email, String password) async {
-    if (_formKey.currentState!.validate() && verifyOTP()) {
+    if (_formKey.currentState!.validate() && verifyOTP() ) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {postUserDetailsToFireStore()})
@@ -364,8 +364,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void sendOTP() async {
-    EmailAuth.sessionName = "request send otp";
-    var res = await EmailAuth.sendOtp(receiverMail: emailController.text);
+    // var ramdom = Uuid().v1();
+     EmailAuth.sessionName = 'send otp email';
+     var res = await EmailAuth.sendOtp(receiverMail: emailController.text.trim());
 
     if (res) {
       Fluttertoast.showToast(msg: 'Đã gửi OTP');
