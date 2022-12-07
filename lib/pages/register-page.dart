@@ -1,9 +1,9 @@
+import 'package:auth_email/auth_email.dart';
 import 'package:bepro/Utility/utilities.dart';
 import 'package:bepro/models/category_model.dart';
 import 'package:bepro/models/user_model.dart';
 import 'package:bepro/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_auth/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +28,12 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController otpController = TextEditingController();
+
+  final authEmail = AuthEmail(
+    appName: 'Bepro Timemanagement And Task',
+    server: 'https://auth.vursin.com/email/example',
+    serverKey: 'ohYwh',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -325,7 +331,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void SignUp(String email, String password) async {
-    if (_formKey.currentState!.validate() && verifyOTP() ) {
+    if (_formKey.currentState!.validate() && verifyOTP()) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {postUserDetailsToFireStore()})
@@ -365,10 +371,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void sendOTP() async {
     // var ramdom = Uuid().v1();
-     EmailAuth.sessionName = 'send otp email';
-     var res = await EmailAuth.sendOtp(receiverMail: emailController.text.trim());
+    var res = authEmail.sendOTP(email: emailController.text);
 
-    if (res) {
+    if (await res) {
       Fluttertoast.showToast(msg: 'Đã gửi OTP');
     } else {
       Fluttertoast.showToast(msg: 'Chưa thể gửi OTP. Thử lại sau');
@@ -376,8 +381,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   bool verifyOTP() {
-    var res = EmailAuth.validate(
-        receiverMail: emailController.text, userOTP: otpController.text);
+    var res = authEmail.verifyOTP(
+        email: emailController.text, otp: otpController.text);
     if (res) {
       Fluttertoast.showToast(msg: 'Đã xác thực OTP');
       return true;

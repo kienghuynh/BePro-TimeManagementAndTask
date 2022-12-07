@@ -51,7 +51,7 @@ dependencies:
   timer_builder: ^2.0.0
 
   # email auth with otp
-  email_auth: ^0.0.1
+  auth_email: ^0.0.4
 
   # google bottom bar
   google_nav_bar: ^5.0.6

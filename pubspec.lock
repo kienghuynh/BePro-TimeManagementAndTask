@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
+  auth_email:
+    dependency: "direct main"
+    description:
+      name: auth_email
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -78,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  email_auth:
-    dependency: "direct main"
-    description:
-      name: email_auth
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1+4"
   fake_async:
     dependency: transitive
     description:
@@ -392,4 +392,4 @@ packages:
     version: "2.1.2"
 sdks:
   dart: ">=2.18.0-271.7.beta <3.0.0"
-  flutter: ">=1.20.0"
+  flutter: ">=1.12.13+hotfix.5"
