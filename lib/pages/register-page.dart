@@ -334,7 +334,9 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate() && verifyOTP()) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) => {postUserDetailsToFireStore()})
+          .then((value) => {
+            postUserDetailsToFireStore()
+          })
           .catchError((e) {
         Fluttertoast.showToast(msg: e!.message);
       });
@@ -346,10 +348,7 @@ class _RegisterPageState extends State<RegisterPage> {
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
 
-    CategoryModel cate = CategoryModel();
-    var v1 = Uuid().v4();
-    cate.uid = v1;
-    cate.categoryName = 'Cá nhân';
+    
 
     userModel.email = user!.email;
     userModel.uid = user.uid;
@@ -357,7 +356,18 @@ class _RegisterPageState extends State<RegisterPage> {
     userModel.fullName = fullNameController.text;
     userModel.phoneNumber = phoneController.text;
 
-    await firebaseFirestore.collection("users").doc(user.uid).set(cate.toMap());
+    CategoryModel cate = CategoryModel();
+    var v1 = Uuid().v4();
+    cate.uid = v1;
+    cate.categoryName = 'Cá nhân';
+
+    await firebaseFirestore
+    .collection("users")
+    .doc(user.uid)
+    .collection('categories')
+    .doc(cate.uid)
+    .set(cate.toMap());
+
 
     await firebaseFirestore
         .collection("users")
@@ -368,6 +378,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     NavigationService().popToFirst();
   }
+
 
   void sendOTP() async {
     // var ramdom = Uuid().v1();
