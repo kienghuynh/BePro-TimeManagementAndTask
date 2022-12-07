@@ -3,6 +3,7 @@ import 'package:bepro/services/navigation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'pages/login_page.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
@@ -26,6 +27,9 @@ class _MyAppState extends State<MyApp> {
   var auth = FirebaseAuth.instance;
   bool isLogin = false;
 
+  // final FlutterLocalNotificationsPlugin noti =
+  //     FlutterLocalNotificationsPlugin();
+
   checkIfLogin() async {
     auth.authStateChanges().listen((User? user) {
       if (user != null && mounted) {
@@ -47,7 +51,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       debugShowCheckedModeBanner: false,
       title: 'BePro Time Management And Task',
       theme: ThemeData(
@@ -61,7 +64,7 @@ class _MyAppState extends State<MyApp> {
       ],
       supportedLocales: [const Locale('en'), const Locale('vi')],
       locale: Locale('vi'),
-      home: (isLogin) ? HomePage() : LoginPage()  ,
+      home: (isLogin) ? HomePage() : LoginPage(),
       navigatorKey: NavigationService().navigationKey,
     );
   }
