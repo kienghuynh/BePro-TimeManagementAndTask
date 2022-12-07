@@ -203,8 +203,8 @@ class _HomePageState extends State<HomePage> {
       countWillLate = listLate.length.toString();
     });
 
-    //cron.schedule(Schedule.parse('0 8 */1 * *'), () async {
-      cron.schedule(Schedule.parse('*/5 * * * * *'), () async {
+    cron.schedule(Schedule.parse('0 8 */1 * *'), () async {
+      //cron.schedule(Schedule.parse('*/5 * * * * *'), () async {
       init();
       print('Run cron');
     });
