@@ -96,8 +96,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   phoneController,
                   Icon(Icons.phone_android),
                 ),
-                const SizedBox(height: 15),
-                _OTPField('Mã OTP ...', otpController),
+                // const SizedBox(height: 15),
+                // _OTPField('Mã OTP ...', otpController),
                 const SizedBox(height: 50),
                 _registerButton(),
                 const SizedBox(height: 20),
@@ -298,7 +298,7 @@ class _RegisterPageState extends State<RegisterPage> {
         suffixIcon: TextButton(
           child: Text('Gữi mã OTP'),
           onPressed: () {
-            sendOTP();
+            //sendOTP();
           },
         ),
         hintText: hintText,
@@ -331,11 +331,11 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void SignUp(String email, String password) async {
-    if (_formKey.currentState!.validate() && verifyOTP()) {
+    if (_formKey.currentState!.validate() /*&& verifyOTP()*/) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) => {
-            postUserDetailsToFireStore()
+            postUserDetailsToFireStore()  
           })
           .catchError((e) {
         Fluttertoast.showToast(msg: e!.message);
@@ -380,26 +380,26 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 
-  void sendOTP() async {
-    // var ramdom = Uuid().v1();
-    var res = authEmail.sendOTP(email: emailController.text);
+  // void sendOTP() async {
+  //   // var ramdom = Uuid().v1();
+  //   var res = authEmail.sendOTP(email: emailController.text);
 
-    if (await res) {
-      Fluttertoast.showToast(msg: 'Đã gửi OTP');
-    } else {
-      Fluttertoast.showToast(msg: 'Chưa thể gửi OTP. Thử lại sau');
-    }
-  }
+  //   if (await res) {
+  //     Fluttertoast.showToast(msg: 'Đã gửi OTP');
+  //   } else {
+  //     Fluttertoast.showToast(msg: 'Chưa thể gửi OTP. Thử lại sau');
+  //   }
+  // }
 
-  bool verifyOTP() {
-    var res = authEmail.verifyOTP(
-        email: emailController.text, otp: otpController.text);
-    if (res) {
-      Fluttertoast.showToast(msg: 'Đã xác thực OTP');
-      return true;
-    } else {
-      Fluttertoast.showToast(msg: 'OTP không hợp lệ');
-      return false;
-    }
-  }
+  // bool verifyOTP() {
+  //   var res = authEmail.verifyOTP(
+  //       email: emailController.text, otp: otpController.text);
+  //   if (res) {
+  //     Fluttertoast.showToast(msg: 'Đã xác thực OTP');
+  //     return true;
+  //   } else {
+  //     Fluttertoast.showToast(msg: 'OTP không hợp lệ');
+  //     return false;
+  //   }
+  // }
 }
